@@ -68,7 +68,7 @@ on:
     branches: [main]
 
 jobs:
-  verify:
+  typecheck:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -83,9 +83,59 @@ jobs:
       - run: npx prisma generate
 
       - run: npm run typecheck
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx prisma generate
+
       - run: npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx prisma generate
+
       - run: npm run test
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx prisma generate
+
       - run: npm run build
 ```
 
-Keep each verification step separate so it can be marked as a required status check.
+This produces four separate required status checks:
+
+- `typecheck`
+- `lint`
+- `test`
+- `build`
