@@ -1,0 +1,15 @@
+{
+  "name": "unicore-skills",
+  "displayName": "unicore skills",
+  "description": "Internal engineering playbooks for recurring unicore workflows.",
+  "version": "0.2.0",
+  "author": {
+    "name": "Universe Group - unicore"
+  },
+  "homepage": "https://github.com/universe-unicore/unicore-skills",
+  "repository": "https://github.com/universe-unicore/unicore-skills",
+  "license": "MIT",
+  "keywords": ["skills", "internal-tools", "railway", "nextjs", "unicore"],
+  "skills": "./skills/",
+  "agents": "./.agents/"
+}

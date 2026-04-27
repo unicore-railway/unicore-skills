@@ -1,0 +1,15 @@
+---
+description: Use when a new unicore service needs its GitHub repository, branching rules, and required CI verification checks.
+alwaysApply: false
+---
+
+# Creating the GitHub repo and CI
+
+Primary reference: `skills/creating-github-repo-and-ci/SKILL.md`
+
+Use this rule for:
+
+- repo creation under `universe-unicore`
+- initial publish to GitHub
+- branch protection
+- CI workflow with `typecheck`, `lint`, `test`, and `build`

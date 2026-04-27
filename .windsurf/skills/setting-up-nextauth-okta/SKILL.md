@@ -1,0 +1,1 @@
+../../../skills/setting-up-nextauth-okta/SKILL.md

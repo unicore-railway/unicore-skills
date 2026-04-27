@@ -1,0 +1,23 @@
+{
+  "name": "unicore-skills",
+  "version": "0.2.0",
+  "description": "Internal engineering process guides for Universe Group Head Office (unicore).",
+  "author": {
+    "name": "Universe Group - unicore"
+  },
+  "keywords": ["skills", "internal-tools", "railway", "nextjs", "unicore"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "unicore skills",
+    "shortDescription": "Internal playbooks for recurring engineering work.",
+    "longDescription": "Shared internal engineering guides for bootstrapping and shipping unicore services across supported AI coding tools.",
+    "developerName": "Universe Group - unicore",
+    "category": "Productivity",
+    "defaultPrompt": [
+      "Bootstrap a new internal service for Railway.",
+      "Show the unicore defaults for a new Next.js service.",
+      "List the steps to push a new unicore tool to Railway."
+    ],
+    "brandColor": "#0F766E"
+  }
+}

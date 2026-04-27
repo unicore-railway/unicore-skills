@@ -1,30 +1,118 @@
 # unicore-skills
 
-Process guides for the **Universe Group** Head Office (unicore), packaged as a [Claude Code plugin](https://docs.claude.com/en/docs/claude-code/plugins). Each guide is a skill that Claude can invoke automatically when the topic matches.
+Reusable internal engineering playbooks for the **Universe Group** Head Office (`unicore`), packaged so the same guidance can be consumed by multiple AI coding tools.
 
-## Install
+The repo follows a **shared core + platform shims** model:
+
+- Canonical process guides live in `skills/<topic>/SKILL.md`
+- Per-tool manifests and install docs point back to the same shared content
+- When the guidance changes, update the canonical skill first and sync the shims second
+
+## Supported tools
+
+| Tool | Repo integration |
+| --- | --- |
+| Claude Code | `.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json` + `skills/` |
+| Codex | `.codex-plugin/plugin.json` + `.codex/INSTALL.md` + `skills/` |
+| Cursor | `.cursor-plugin/plugin.json` + `.cursor/rules/*.mdc` + `AGENTS.md` |
+| Windsurf | `.windsurf/skills/*/SKILL.md` + `.agents/skills/*/SKILL.md` |
+| GitHub Copilot | `.github/copilot-instructions.md` + `AGENTS.md` |
+
+## Repository layout
+
+```text
+.
+├── skills/                     # Canonical skill content
+├── .claude-plugin/             # Claude Code manifest
+├── .codex-plugin/              # Codex manifest
+├── .codex/                     # Codex install docs
+├── .cursor-plugin/             # Cursor manifest and install docs
+├── .agents/skills/             # Generic Agent Skills adapter
+├── .cursor/rules/              # Cursor project rules
+├── .windsurf/skills/           # Windsurf workspace skills
+├── .github/                    # GitHub Copilot instructions
+├── docs/                       # Tool-specific integration notes
+├── scripts/                    # Helper scripts for consumer repos
+├── AGENTS.md                   # Cross-tool repo instructions
+└── CLAUDE.md                   # Contributor notes for Claude-style agents
+```
+
+## Current skills
+
+| Skill | What it covers |
+| --- | --- |
+| [`bootstrapping-unicore-service`](skills/bootstrapping-unicore-service/SKILL.md) | Top-level orchestrator for taking a new internal unicore service from zero to production on Railway. |
+| [`new-project-to-railway`](skills/new-project-to-railway/SKILL.md) | Thin Railway-specific alias that points to `bootstrapping-unicore-service`. |
+| [`bootstrapping-nextjs-service`](skills/bootstrapping-nextjs-service/SKILL.md) | Scaffolding a new service with the standard Next.js, TypeScript, lint, formatting, test, and SPA-plus-API defaults. |
+| [`setting-up-prisma-postgres`](skills/setting-up-prisma-postgres/SKILL.md) | Adding local PostgreSQL, Prisma, the initial schema, and migration scripts. |
+| [`setting-up-nextauth-okta`](skills/setting-up-nextauth-okta/SKILL.md) | Adding Okta SSO through NextAuth, plus local env and onboarding defaults. |
+| [`creating-github-repo-and-ci`](skills/creating-github-repo-and-ci/SKILL.md) | Publishing the repo to GitHub and adding the required CI checks. |
+| [`deploying-to-railway`](skills/deploying-to-railway/SKILL.md) | Connecting the service to Railway, configuring production settings, and attaching the custom domain. |
+
+## Install from GitHub
+
+Detailed platform notes:
+
+- Codex: [docs/README.codex.md](/Users/romanshevchuk/Projects/unicore-skills/docs/README.codex.md)
+- Cursor: [docs/README.cursor.md](/Users/romanshevchuk/Projects/unicore-skills/docs/README.cursor.md)
+- Architecture: [docs/ARCHITECTURE.md](/Users/romanshevchuk/Projects/unicore-skills/docs/ARCHITECTURE.md)
+
+### Claude Code
+
+Marketplace install:
 
 ```bash
 /plugin marketplace add universe-unicore/unicore-skills
 /plugin install unicore-skills@universe-unicore
 ```
 
-For local iteration:
+Local iteration:
 
 ```bash
 claude --plugin-dir /path/to/unicore-skills
 ```
 
-## Skills
+This now works because the repository includes [.claude-plugin/marketplace.json](/Users/romanshevchuk/Projects/unicore-skills/.claude-plugin/marketplace.json) in addition to the plugin manifest.
 
-| Skill | What it covers |
-| --- | --- |
-| [`new-project-to-railway`](skills/new-project-to-railway/SKILL.md) | Bootstrapping a new internal Next.js service, pushing to GitHub under `universe-unicore`, and deploying to Railway. |
+### Codex
+
+Codex uses native skill discovery well with a clone-and-symlink flow. The install instructions live in [.codex/INSTALL.md](/Users/romanshevchuk/Projects/unicore-skills/.codex/INSTALL.md).
+
+### Cursor
+
+Cursor now has a first-class plugin manifest in [.cursor-plugin/plugin.json](/Users/romanshevchuk/Projects/unicore-skills/.cursor-plugin/plugin.json). For private/internal use before marketplace publishing, use repo-local adapters:
+
+```bash
+git clone https://github.com/universe-unicore/unicore-skills.git
+bash unicore-skills/scripts/install-consumer-adapters.sh /path/to/target-repo
+```
+
+That installs:
+
+- `.agents/skills/`
+- `.cursor/rules/`
+- `AGENTS.md`
+- `.github/copilot-instructions.md`
+- `.windsurf/skills/`
+
+Marketplace and local-install notes live in [.cursor-plugin/INSTALL.md](/Users/romanshevchuk/Projects/unicore-skills/.cursor-plugin/INSTALL.md).
+
+### Windsurf
+
+Windsurf supports repo-local and global skills. For a GitHub-distributed repo, you can either:
+
+- commit `.windsurf/skills/` into the target repo
+- use the adapter installer above
+- or clone/copy the `.agents/skills/` or `.windsurf/skills/` folders into a workspace
+
+### GitHub Copilot
+
+Copilot uses repository files, not a separate plugin installer. The adapter installer above copies the needed files into the target repo.
 
 ## Adding a new guide
 
 1. Create `skills/<topic-slug>/SKILL.md`.
-2. Add YAML frontmatter at the top — the `description` is what Claude reads to decide when to use the skill, so make it concrete and trigger-friendly:
+2. Add YAML frontmatter at the top. Keep `description` concrete and trigger-friendly:
 
    ```yaml
    ---
@@ -33,5 +121,16 @@ claude --plugin-dir /path/to/unicore-skills
    ---
    ```
 
-3. Bump `version` in `.claude-plugin/plugin.json`.
-4. Open a PR (or commit to `main` while the project is still finding its shape — see the trunk-based section in the [`new-project-to-railway`](skills/new-project-to-railway/SKILL.md) guide).
+3. Add or update adapters for the supported tools:
+   - Claude Code: usually none beyond the shared `skills/` folder
+   - Codex: usually none beyond the shared `skills/` folder
+   - Codex install notes: update `.codex/INSTALL.md` when the install flow changes
+   - Generic agent ecosystems: add or update `.agents/skills/<topic-slug>/SKILL.md`
+   - Cursor packaging: update `.cursor-plugin/plugin.json` if the plugin surface changes
+   - Cursor: add or update `.cursor/rules/*.mdc`
+   - Windsurf: add or update `.windsurf/skills/<topic-slug>/SKILL.md`
+   - GitHub Copilot: update `.github/copilot-instructions.md` or `AGENTS.md` if needed
+4. Bump plugin versions when packaging changes:
+   - `.claude-plugin/plugin.json`
+   - `.codex-plugin/plugin.json`
+5. Open a PR or commit according to the workflow documented in the skill itself.

@@ -1,0 +1,1 @@
+../../../skills/setting-up-prisma-postgres/SKILL.md

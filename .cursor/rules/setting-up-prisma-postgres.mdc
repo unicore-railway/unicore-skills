@@ -1,0 +1,16 @@
+---
+description: Use when a unicore Next.js service needs local PostgreSQL through a Docker-compatible runtime plus Prisma schema, client, and migration setup.
+alwaysApply: false
+---
+
+# Setting up Prisma and PostgreSQL
+
+Primary reference: `skills/setting-up-prisma-postgres/SKILL.md`
+
+Use this rule for:
+
+- local containerized Postgres with `docker compose`
+- Prisma installation
+- initial auth-compatible schema
+- shared Prisma client
+- migration and database scripts

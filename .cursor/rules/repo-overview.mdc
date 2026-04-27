@@ -1,0 +1,16 @@
+---
+description: Repository overview for the unicore multi-IDE skills pack.
+alwaysApply: true
+---
+
+# unicore-skills repository overview
+
+- This repository stores internal engineering playbooks for Universe Group Head Office (`unicore`).
+- Canonical process content lives in `skills/<topic>/SKILL.md`.
+- IDE-specific adapters live in:
+  - `.claude-plugin/`
+  - `.codex-plugin/`
+  - `.cursor/rules/`
+  - `.windsurf/skills/`
+  - `.github/`
+- When updating guidance, edit the canonical skill first and then sync the adapter files.

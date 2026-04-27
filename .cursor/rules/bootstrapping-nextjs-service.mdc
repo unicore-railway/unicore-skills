@@ -1,0 +1,16 @@
+---
+description: Use when starting a new internal unicore Next.js service and you need the standard scaffold, TypeScript, lint, formatting, testing, and SPA-plus-API defaults.
+alwaysApply: false
+---
+
+# Bootstrapping a Next.js service
+
+Primary reference: `skills/bootstrapping-nextjs-service/SKILL.md`
+
+Use this rule for:
+
+- `create-next-app` with Pages Router
+- TypeScript strictness
+- ESLint flat config plus Prettier
+- Vitest setup
+- SPA plus API route architecture

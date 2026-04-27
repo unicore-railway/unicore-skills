@@ -1,0 +1,16 @@
+---
+description: Use when a unicore service is ready to connect to Railway, configure production settings, and attach its railway.unicore-tools.io domain.
+alwaysApply: false
+---
+
+# Deploying to Railway
+
+Primary reference: `skills/deploying-to-railway/SKILL.md`
+
+Use this rule for:
+
+- Railway project creation
+- production Okta app
+- production environment variables
+- build and start commands
+- auto-deploy and custom domain setup

@@ -1,0 +1,16 @@
+---
+description: Use when a unicore internal service needs Okta SSO through NextAuth, including local env files and developer onboarding steps.
+alwaysApply: false
+---
+
+# Setting up NextAuth and Okta
+
+Primary reference: `skills/setting-up-nextauth-okta/SKILL.md`
+
+Use this rule for:
+
+- dev Okta app creation
+- NextAuth plus Prisma adapter wiring
+- SessionProvider setup
+- protected API routes
+- `.env.example` and `.env.local` conventions
