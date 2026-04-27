@@ -23,6 +23,7 @@ Never run `gh repo create ... --public` for a `unicore-railway` service repo, an
 
 ```bash
 git init
+git branch -M main
 git add -A
 git commit -m "chore: initial commit"
 gh repo create unicore-railway/my-service \
@@ -33,6 +34,7 @@ gh repo create unicore-railway/my-service \
 ```
 
 The `--private` flag is required — every example in this guide assumes it.
+The `git branch -M main` step is also required so CI, Railway auto-deploy, and branch protection all target the same default branch.
 
 ## Branching rules
 
