@@ -84,6 +84,7 @@ model Account {
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  @@index([userId])
   @@unique([provider, providerAccountId])
 }
 
@@ -93,14 +94,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
 
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
+  @@index([userId])
 }
 ```
 
@@ -146,3 +141,8 @@ DATABASE_URL="postgresql://dev:dev@localhost:5432/myservice?schema=public"
 ```
 
 If auth is also being added, continue with `setting-up-nextauth-okta`, which expects the Prisma models above.
+
+Notes on the auth tables:
+
+- `VerificationToken` is intentionally omitted from the baseline because the default unicore flow uses Okta SSO, not email or magic-link login.
+- `Account` still includes provider token columns for adapter compatibility, but the baseline auth policy does not assume those tokens are used after sign-in.
