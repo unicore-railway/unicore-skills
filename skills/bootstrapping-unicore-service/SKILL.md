@@ -16,8 +16,17 @@ The house defaults are:
 - Vitest for core logic
 - Prisma plus PostgreSQL
 - NextAuth plus Okta OIDC
-- GitHub repo under `universe-unicore`
+- GitHub repo under `unicore-railway`, **always private** (never `--public`)
 - Railway production deployment under `railway.unicore-tools.io`
+
+## Access prerequisites
+
+Both the GitHub org and the Railway workspace are paid, invite-only, and dedicated to internal unicore tools that are **vibe-coded** and **hosted on Railway**. Before doing anything else, the engineer (or agent acting on their behalf) needs to be a member of:
+
+1. **GitHub org**: [`unicore-railway`](https://github.com/unicore-railway) — for repo creation and pushes.
+2. **Railway workspace**: **Universe Unicore**. Joining the workspace is the only way to deploy services to the company's paid Railway plan.
+
+**Ask Roman Shevchuk** (`roman.shevchuk@uni.tech`) to add you to the GitHub org and Railway workspace. Don't try to scaffold a service before access is confirmed — `gh repo create` and Railway project creation will both fail.
 
 ## Recommended companion plugin
 

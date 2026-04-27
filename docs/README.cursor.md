@@ -7,7 +7,7 @@ Until `unicore-skills` is published in the Cursor Marketplace, Cursor can consum
 ## Quick install
 
 ```bash
-git clone https://github.com/universe-unicore/unicore-skills.git
+git clone https://github.com/unicore-railway/unicore-skills.git
 bash unicore-skills/scripts/install-consumer-adapters.sh /path/to/target-repo
 ```
 

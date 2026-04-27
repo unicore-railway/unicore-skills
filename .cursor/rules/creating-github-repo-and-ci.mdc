@@ -9,7 +9,7 @@ Primary reference: `skills/creating-github-repo-and-ci/SKILL.md`
 
 Use this rule for:
 
-- repo creation under `universe-unicore`
+- repo creation under `unicore-railway` — **always private** (`gh repo create --private`); never `--public`
 - initial publish to GitHub
 - branch protection
 - CI workflow with `typecheck`, `lint`, `test`, and `build`

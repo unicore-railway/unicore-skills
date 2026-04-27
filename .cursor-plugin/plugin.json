@@ -6,8 +6,8 @@
   "author": {
     "name": "Universe Group - unicore"
   },
-  "homepage": "https://github.com/universe-unicore/unicore-skills",
-  "repository": "https://github.com/universe-unicore/unicore-skills",
+  "homepage": "https://github.com/unicore-railway/unicore-skills",
+  "repository": "https://github.com/unicore-railway/unicore-skills",
   "license": "MIT",
   "keywords": ["skills", "internal-tools", "railway", "nextjs", "unicore"],
   "skills": "./skills/",

@@ -7,18 +7,32 @@ description: Use when a new unicore service needs its GitHub repository, branchi
 
 Use this skill once the local project structure is ready to publish.
 
+## Visibility — always private
+
+**All service repos under [`unicore-railway`](https://github.com/unicore-railway) must be created as private.** This is non-negotiable.
+
+Why:
+
+- Repos reference internal Okta apps, internal domains (`*.railway.unicore-tools.io`), and Railway service names.
+- They may contain references to internal data models, internal users, and access patterns.
+- Public visibility is reserved for clearly intended OSS work (e.g. this `unicore-skills` repo) — service repos are not that.
+
+Never run `gh repo create ... --public` for a `unicore-railway` service repo, and don't toggle visibility to public after the fact. If you genuinely need a public repo, raise it with **Roman Shevchuk** before creating.
+
 ## Create the repository
 
 ```bash
 git init
 git add -A
 git commit -m "chore: initial commit"
-gh repo create universe-unicore/my-service \
+gh repo create unicore-railway/my-service \
   --private \
   --source=. \
   --remote=origin \
   --push
 ```
+
+The `--private` flag is required — every example in this guide assumes it.
 
 ## Branching rules
 

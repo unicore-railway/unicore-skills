@@ -7,11 +7,19 @@ description: Use when a unicore service is ready to connect to Railway, configur
 
 Use this skill when the repository, database, and auth wiring are ready and the service needs a production deployment.
 
+## Prerequisites
+
+You must be a member of the **Universe Unicore** Railway workspace (the company's paid plan). All unicore services live there.
+
+If you don't have access yet, ask **Roman Shevchuk** (`roman.shevchuk@uni.tech`) to add you to the workspace.
+
+Make sure the **Universe Unicore** workspace is selected in Railway before creating the project — otherwise the project lands in a personal workspace and won't be on the paid plan.
+
 ## Create the Railway project
 
 In Railway:
 
-1. Create a new project from the GitHub repo `universe-unicore/my-service`.
+1. Create a new project from the GitHub repo `unicore-railway/my-service`.
 2. Let Railway create the `web` service.
 3. Add a PostgreSQL service in the same Railway project.
 

@@ -5,7 +5,7 @@
 Tell Codex:
 
 ```text
-Fetch and follow instructions from https://raw.githubusercontent.com/universe-unicore/unicore-skills/main/.codex/INSTALL.md
+Fetch and follow instructions from https://raw.githubusercontent.com/unicore-railway/unicore-skills/main/.codex/INSTALL.md
 ```
 
 ## How it works

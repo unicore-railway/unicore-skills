@@ -2,11 +2,22 @@
 
 Reusable internal engineering playbooks for the **Universe Group** Head Office (`unicore`), packaged so the same guidance can be consumed by multiple AI coding tools.
 
+Scope: this org ([`unicore-railway`](https://github.com/unicore-railway)) is dedicated to internal company projects that are **vibe-coded** and **hosted on Railway**. Skills here encode the conventions, defaults, and access flows specific to that setup.
+
 The repo follows a **shared core + platform shims** model:
 
 - Canonical process guides live in `skills/<topic>/SKILL.md`
 - Per-tool manifests and install docs point back to the same shared content
 - When the guidance changes, update the canonical skill first and sync the shims second
+
+## Access
+
+Both the GitHub org and the Railway workspace are paid and invite-only. Before scaffolding a service, get added to:
+
+1. **GitHub org**: [`unicore-railway`](https://github.com/unicore-railway)
+2. **Railway workspace**: **Universe Unicore**
+
+Ask **Roman Shevchuk** (`roman.shevchuk@uni.tech`) to add you to the GitHub org and Railway workspace. Joining the workspace is the only way to deploy on the company's paid Railway plan.
 
 ## Supported tools
 
@@ -62,8 +73,8 @@ Detailed platform notes:
 Marketplace install:
 
 ```bash
-/plugin marketplace add universe-unicore/unicore-skills
-/plugin install unicore-skills@universe-unicore
+/plugin marketplace add unicore-railway/unicore-skills
+/plugin install unicore-skills@unicore-railway
 ```
 
 Local iteration:
@@ -83,7 +94,7 @@ Codex uses native skill discovery well with a clone-and-symlink flow. The instal
 Cursor now has a first-class plugin manifest in [.cursor-plugin/plugin.json](/Users/romanshevchuk/Projects/unicore-skills/.cursor-plugin/plugin.json). For private/internal use before marketplace publishing, use repo-local adapters:
 
 ```bash
-git clone https://github.com/universe-unicore/unicore-skills.git
+git clone https://github.com/unicore-railway/unicore-skills.git
 bash unicore-skills/scripts/install-consumer-adapters.sh /path/to/target-repo
 ```
 

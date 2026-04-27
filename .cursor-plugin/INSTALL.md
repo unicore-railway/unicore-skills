@@ -7,7 +7,7 @@
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/universe-unicore/unicore-skills.git
+git clone https://github.com/unicore-railway/unicore-skills.git
 ```
 
 2. Install the repo-local adapters into the target repository:

@@ -7,7 +7,7 @@ Enable `unicore-skills` in Codex through native skill discovery.
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/universe-unicore/unicore-skills.git ~/.codex/unicore-skills
+git clone https://github.com/unicore-railway/unicore-skills.git ~/.codex/unicore-skills
 ```
 
 2. Create the discovery symlink:
