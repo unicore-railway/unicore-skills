@@ -14,9 +14,13 @@ _Last verified against current tooling: **2026-04-24**._
 - Node.js 24 LTS
 - npm 11+
 - Colima installed and running with the Docker runtime
-- GitHub access to the [`unicore-railway`](https://github.com/unicore-railway) org and to the **Universe Unicore** Railway workspace (see Access prerequisites in `bootstrapping-unicore-service/SKILL.md`)
-- Railway CLI available for later deployment
-- `gh` CLI recommended
+
+Optional later-stage tooling:
+
+- `gh` CLI for repository creation
+- Railway CLI for deployment work
+
+GitHub org access and Railway workspace access are not required for local scaffolding. Those prerequisites belong to `bootstrapping-unicore-service` and `deploying-to-railway`.
 
 Recommended local container setup on macOS:
 
