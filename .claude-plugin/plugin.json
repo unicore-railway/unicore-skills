@@ -1,0 +1,8 @@
+{
+  "name": "unicore-skills",
+  "description": "Process guides for the Universe Group Head Office (unicore) — packaged as Claude Code skills.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Universe Group — unicore"
+  }
+}
