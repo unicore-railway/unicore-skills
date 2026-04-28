@@ -5,14 +5,14 @@
   },
   "metadata": {
     "description": "Internal engineering playbooks for Universe Group Head Office (unicore).",
-    "version": "0.2.0"
+    "version": "0.5.1"
   },
   "plugins": [
     {
       "name": "unicore-skills",
       "source": "./",
       "description": "Internal engineering process guides packaged as Claude Code skills.",
-      "version": "0.2.0",
+      "version": "0.5.1",
       "author": {
         "name": "Universe Group - unicore"
       },

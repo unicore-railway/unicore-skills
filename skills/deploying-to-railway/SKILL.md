@@ -27,10 +27,33 @@ Keep `web` and `postgres` in one Railway project.
 
 ## Create the production Okta app
 
-Create a second OIDC Web Application:
+A **separate** Okta app for production. Never reuse the dev app's credentials in prod — the redirect URIs differ, and rotating one shouldn't take down the other. Same two-path approach as in `setting-up-nextauth-okta`.
 
-- Sign-in redirect: `https://<service>.railway.unicore-tools.io/api/auth/callback/okta`
-- Sign-out redirect: `https://<service>.railway.unicore-tools.io`
+### If you are not the Okta admin
+
+Send the admin this request, replacing `<service-name>`:
+
+> Hi, I need a production Okta OIDC Web Application for `<service-name>`. Settings:
+>
+> - **App name**: `<service-name> (prod)`
+> - **App type**: OIDC — Web Application
+> - **Sign-in redirect URI**: `https://<service-name>.railway.unicore-tools.io/api/auth/callback/okta`
+> - **Sign-out redirect URI**: `https://<service-name>.railway.unicore-tools.io`
+> - **Assigned group**: the internal unicore group used for internal tools (same group as the dev app)
+>
+> Please send the **Client ID** and **Client Secret** through 1Password / Bitwarden — secret is sensitive.
+
+When the admin replies, paste the values directly into Railway's variables UI for the `web` service (see the next section). Do not store the production Client Secret in any repo file — Railway is the only source of truth.
+
+### If you are the Okta admin
+
+Repeat the dev-app steps from `setting-up-nextauth-okta` with these differences:
+
+- App integration name: `<service-name> (prod)`
+- Sign-in redirect URI: `https://<service-name>.railway.unicore-tools.io/api/auth/callback/okta`
+- Sign-out redirect URI: `https://<service-name>.railway.unicore-tools.io`
+
+Send the Client ID and Client Secret through a secure channel.
 
 ## Production variables
 
@@ -39,13 +62,14 @@ Set these on the `web` service:
 | Key | Value |
 | --- | --- |
 | `DATABASE_URL` | `${{Postgres.DATABASE_URL}}` |
-| `NEXTAUTH_SECRET` | fresh `openssl rand -base64 32` output |
-| `NEXTAUTH_URL` | `https://<service>.railway.unicore-tools.io` |
+| `AUTH_SECRET` | fresh `openssl rand -base64 32` output |
+| `AUTH_URL` | `https://<service>.railway.unicore-tools.io` |
+| `AUTH_TRUST_HOST` | `true` (Railway terminates TLS in front of the app) |
 | `OKTA_CLIENT_ID` | production Okta app client ID |
 | `OKTA_CLIENT_SECRET` | production Okta app client secret |
 | `OKTA_ISSUER` | `https://universe.okta.com` |
 
-Railway variables are the source of truth for production secrets.
+Railway variables are the source of truth for production secrets. Names follow the Auth.js v5 convention (`AUTH_*`); the legacy `NEXTAUTH_*` names are no longer used.
 
 ## Build and start commands
 
@@ -62,12 +86,23 @@ Use:
 - Use production only
 - Do not create staging or preview environments by default
 
+## Healthcheck
+
+Configure the Railway `web` service to use `/api/health` as its healthcheck path.
+
+This endpoint is defined in `bootstrapping-nextjs-service` and extended by every dependency skill (`setting-up-prisma-postgres`, `setting-up-nextauth-okta`). It returns:
+
+- `200` with `{ status: 'ok' | 'degraded', checks: [...] }` when the app and every registered dependency are reachable
+- `503` with `{ status: 'down', checks: [...] }` when any dependency is `down`
+
+Railway uses this signal to gate traffic during deploys — a failed healthcheck keeps the previous version serving instead of replacing it with a broken one.
+
 ## Custom domain
 
 1. Add `<service>.railway.unicore-tools.io` as a custom domain.
 2. Create the CNAME record in the `unicore-tools.io` DNS zone.
 3. Wait for the certificate to issue.
-4. Confirm `NEXTAUTH_URL` and the production Okta callback URLs match the custom domain.
+4. Confirm `AUTH_URL` and the production Okta callback URLs match the custom domain.
 
 ## Logging baseline
 

@@ -1,0 +1,19 @@
+---
+description: Use when a unicore Next.js service needs the tRPC layer for type-safe app-internal API calls. Required for every app-internal endpoint — raw pages/api/* is reserved for /api/health and /api/auth/* only.
+alwaysApply: false
+---
+
+# Setting up tRPC
+
+Primary reference: `skills/setting-up-trpc/SKILL.md`
+
+Use this rule for:
+
+- tRPC v11 + TanStack Query install and pin
+- `src/server/trpc.ts` (init, context with Auth.js v5 session, `protectedProcedure` middleware)
+- `src/server/router.ts` (root router; split into `routers/<module>.ts` as it grows)
+- `src/pages/api/trpc/[trpc].ts` (the only catch-all tRPC handler)
+- `src/lib/trpc.ts` (typed client, SPA mode `ssr: false`, `httpBatchLink`)
+- `_app.tsx` wrapped with `trpc.withTRPC(App)`
+- Zod input validation on every procedure
+- Refusal to add new raw `pages/api/*` handlers for app data

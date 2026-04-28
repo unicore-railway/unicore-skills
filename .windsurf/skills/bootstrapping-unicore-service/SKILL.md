@@ -1,1 +1,0 @@
-../../../skills/bootstrapping-unicore-service/SKILL.md

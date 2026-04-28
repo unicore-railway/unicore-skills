@@ -1,1 +1,0 @@
-../../../skills/new-project-to-railway/SKILL.md

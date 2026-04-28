@@ -1,0 +1,16 @@
+---
+description: Use FIRST when the user is non-technical (PM, finance, legal, ops) or is starting from a fresh laptop. Verifies prerequisites (Node 24, Colima, gh, railway) and access before any unicore service scaffolding.
+alwaysApply: false
+---
+
+# Zero to running tool
+
+Primary reference: `skills/zero-to-running-tool/SKILL.md`
+
+Use this rule as a **gate** before any other unicore rule when:
+
+- the user identifies as non-engineer (PM, finance, legal, ops, support)
+- the user mentions a clean or new machine
+- a prerequisite check (`node -v`, `gh auth status`, `railway whoami`) fails
+
+Verify each step (Node 24, Colima, `gh` org membership, Railway workspace) before continuing. Do not silently move on past a failing check.

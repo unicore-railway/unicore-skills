@@ -52,11 +52,12 @@ Ask **Roman Shevchuk** (`roman.shevchuk@uni.tech`) to add you to the GitHub org 
 
 | Skill | What it covers |
 | --- | --- |
-| [`bootstrapping-unicore-service`](skills/bootstrapping-unicore-service/SKILL.md) | Top-level orchestrator for taking a new internal unicore service from zero to production on Railway. |
-| [`new-project-to-railway`](skills/new-project-to-railway/SKILL.md) | Thin Railway-specific alias that points to `bootstrapping-unicore-service`. |
-| [`bootstrapping-nextjs-service`](skills/bootstrapping-nextjs-service/SKILL.md) | Scaffolding a new service with the standard Next.js, TypeScript, lint, formatting, test, and SPA-plus-API defaults. |
-| [`setting-up-prisma-postgres`](skills/setting-up-prisma-postgres/SKILL.md) | Adding local PostgreSQL, Prisma, the initial schema, and migration scripts. |
-| [`setting-up-nextauth-okta`](skills/setting-up-nextauth-okta/SKILL.md) | Adding Okta SSO through NextAuth, plus local env and onboarding defaults. |
+| [`zero-to-running-tool`](skills/zero-to-running-tool/SKILL.md) | Run first for non-technical users or fresh machines. Installs Node 24, Colima, `gh`, and Railway CLI, and verifies GitHub org and Railway workspace access. |
+| [`building-unicore-tool`](skills/building-unicore-tool/SKILL.md) | Top-level orchestrator for taking a new internal unicore tool from zero to production on Railway. Replaces the old `bootstrapping-unicore-service` and `new-project-to-railway` skills. |
+| [`bootstrapping-nextjs-service`](skills/bootstrapping-nextjs-service/SKILL.md) | Scaffolding a new service with Next.js, TypeScript, lint, formatting, test defaults, `zod`-validated env, and the `/api/health` aggregator. |
+| [`setting-up-prisma-postgres`](skills/setting-up-prisma-postgres/SKILL.md) | Adding local PostgreSQL, Prisma, the initial schema, migration scripts, and the database health check. |
+| [`setting-up-nextauth-okta`](skills/setting-up-nextauth-okta/SKILL.md) | Adding Okta SSO via Auth.js v5 (`@auth/prisma-adapter`), the auth health check, plus local env and onboarding defaults. |
+| [`setting-up-trpc`](skills/setting-up-trpc/SKILL.md) | Adding tRPC v11 + TanStack Query as the only sanctioned client/server layer for app-internal endpoints. |
 | [`creating-github-repo-and-ci`](skills/creating-github-repo-and-ci/SKILL.md) | Publishing the repo to GitHub and adding the required CI checks. |
 | [`deploying-to-railway`](skills/deploying-to-railway/SKILL.md) | Connecting the service to Railway, configuring production settings, and attaching the custom domain. |
 

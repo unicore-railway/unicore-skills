@@ -1,16 +1,18 @@
 ---
-description: Use when a unicore internal service needs Okta SSO through NextAuth, including local env files and developer onboarding steps.
+description: Use when a unicore internal service needs Okta SSO through Auth.js v5, including local env files and developer onboarding steps.
 alwaysApply: false
 ---
 
-# Setting up NextAuth and Okta
+# Setting up Auth.js v5 and Okta
 
 Primary reference: `skills/setting-up-nextauth-okta/SKILL.md`
 
 Use this rule for:
 
 - dev Okta app creation
-- NextAuth plus Prisma adapter wiring
+- Auth.js v5 (`next-auth@5.x` + `@auth/prisma-adapter`) wiring
+- the App Router exception for `app/api/auth/[...nextauth]/route.ts`
 - SessionProvider setup
-- protected API routes
-- `.env.example` and `.env.local` conventions
+- `auth()`-protected API routes
+- the `auth` health check registered in `/api/health`
+- `.env.example` and `.env.local` conventions (`AUTH_SECRET`, `AUTH_URL`, `AUTH_TRUST_HOST`, `OKTA_*`)

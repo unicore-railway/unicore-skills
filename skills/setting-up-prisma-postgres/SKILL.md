@@ -19,7 +19,7 @@ services:
     image: postgres:17
     restart: unless-stopped
     ports:
-      - '5432:5432'
+      - '127.0.0.1:5432:5432'
     environment:
       POSTGRES_USER: dev
       POSTGRES_PASSWORD: dev
@@ -47,7 +47,7 @@ npx prisma init --datasource-provider postgresql
 
 ## Initial schema
 
-Use a minimal schema that already supports NextAuth:
+Use a minimal schema that already supports Auth.js v5 (`@auth/prisma-adapter`):
 
 ```prisma
 generator client {
@@ -99,12 +99,30 @@ model Session {
 }
 ```
 
-## Shared Prisma client
+## Extend env validation
+
+Add `DATABASE_URL` to the schema in `src/lib/env.ts`:
+
+```ts
+import { z } from 'zod';
+
+const schema = z.object({
+  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  DATABASE_URL: z.string().url(),
+});
+
+export const env = schema.parse(process.env);
+```
+
+A missing or malformed `DATABASE_URL` now fails at boot, not at first query.
+
+## Shared Prisma client and health check
 
 Create `src/lib/prisma.ts`:
 
 ```ts
 import { PrismaClient } from '@prisma/client';
+import type { HealthCheckResult } from './health';
 
 declare global {
   // eslint-disable-next-line no-var
@@ -114,6 +132,37 @@ declare global {
 export const prisma = globalThis.prisma ?? new PrismaClient();
 
 if (process.env.NODE_ENV !== 'production') globalThis.prisma = prisma;
+
+export async function checkPrismaHealth(): Promise<HealthCheckResult> {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    return { name: 'database', status: 'ok' };
+  } catch (e) {
+    return {
+      name: 'database',
+      status: 'down',
+      message: e instanceof Error ? e.message : String(e),
+    };
+  }
+}
+```
+
+Register the database check in `src/pages/api/health.ts`:
+
+```ts
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { runHealthChecks, type HealthCheck } from '@/lib/health';
+import { checkPrismaHealth } from '@/lib/prisma';
+
+const checks: HealthCheck[] = [
+  async () => ({ name: 'app', status: 'ok' }),
+  checkPrismaHealth,
+];
+
+export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
+  const result = await runHealthChecks(checks);
+  res.status(result.status === 'down' ? 503 : 200).json(result);
+}
 ```
 
 ## First migration and scripts

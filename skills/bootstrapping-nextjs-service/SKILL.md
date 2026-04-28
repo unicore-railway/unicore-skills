@@ -20,7 +20,7 @@ Optional later-stage tooling:
 - `gh` CLI for repository creation
 - Railway CLI for deployment work
 
-GitHub org access and Railway workspace access are not required for local scaffolding. Those prerequisites belong to `bootstrapping-unicore-service` and `deploying-to-railway`.
+GitHub org access and Railway workspace access are not required for local scaffolding. Those prerequisites belong to `building-unicore-tool` and `deploying-to-railway`.
 
 Recommended local container setup on macOS:
 
@@ -179,48 +179,110 @@ describe('sanity', () => {
 
 Do not add Playwright by default. Add it only when the product actually needs browser-level E2E coverage.
 
+## Env validation
+
+Every unicore service validates its environment at boot using `zod`. Missing or malformed vars must fail at startup with a readable error, not at first use.
+
+Install:
+
+```bash
+npm install zod
+```
+
+Create `src/lib/env.ts`:
+
+```ts
+import { z } from 'zod';
+
+const schema = z.object({
+  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+});
+
+export const env = schema.parse(process.env);
+```
+
+Subsequent skills (`setting-up-prisma-postgres`, `setting-up-nextauth-okta`) extend this schema. Always import `env` from this module — never read `process.env` directly outside of it.
+
+## Health checks
+
+Every unicore service exposes `/api/health`. It composes one health-check function per dependency (database, auth, etc.) so Railway and humans can see at a glance which piece is down.
+
+Create `src/lib/health.ts`:
+
+```ts
+export type HealthStatus = 'ok' | 'degraded' | 'down';
+
+export interface HealthCheckResult {
+  name: string;
+  status: HealthStatus;
+  message?: string;
+}
+
+export type HealthCheck = () => Promise<HealthCheckResult>;
+
+export async function runHealthChecks(checks: HealthCheck[]): Promise<{
+  status: HealthStatus;
+  checks: HealthCheckResult[];
+}> {
+  const results = await Promise.all(
+    checks.map(async (c) => {
+      try {
+        return await c();
+      } catch (e) {
+        return {
+          name: 'unknown',
+          status: 'down' as const,
+          message: e instanceof Error ? e.message : String(e),
+        };
+      }
+    }),
+  );
+  const status: HealthStatus = results.some((r) => r.status === 'down')
+    ? 'down'
+    : results.some((r) => r.status === 'degraded')
+      ? 'degraded'
+      : 'ok';
+  return { status, checks: results };
+}
+```
+
+Create `src/pages/api/health.ts`:
+
+```ts
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { runHealthChecks, type HealthCheck } from '@/lib/health';
+
+const checks: HealthCheck[] = [async () => ({ name: 'app', status: 'ok' })];
+
+export default async function handler(_req: NextApiRequest, res: NextApiResponse) {
+  const result = await runHealthChecks(checks);
+  res.status(result.status === 'down' ? 503 : 200).json(result);
+}
+```
+
+When subsequent skills add a dependency (database, auth, an upstream API), they append a check function to this `checks` array. The endpoint stays one file — only the array grows.
+
 ## SPA plus API pattern
 
 Required approach:
 
-- Pages are plain React components
-- Data loads client-side with `useEffect`, SWR, or TanStack Query
-- Backend logic lives in `pages/api/*`
+- Pages are plain React components.
+- App-internal data goes through tRPC (see `setting-up-trpc`). `tRPC` is the only sanctioned way to call your own API.
+- Backend logic lives in tRPC procedures. The only raw `pages/api/*` handlers in a unicore service are `/api/health` (Railway healthcheck, defined in this skill) and `/api/auth/*` (managed by Auth.js).
 
 Do not use:
 
+- raw `fetch` or `useEffect` + `fetch` for app-internal endpoints — use tRPC
 - `getServerSideProps`
 - `getStaticProps`
 - Server Components
 - Server Actions
 - API calls during render
 
-Example page:
+At this stage of the bootstrap there is no UI data layer yet — `setting-up-trpc` adds it after auth is wired. Use a placeholder page until then:
 
 ```tsx
-import { useEffect, useState } from 'react';
-
-type Health = { ok: boolean };
-
 export default function Home() {
-  const [health, setHealth] = useState<Health | null>(null);
-
-  useEffect(() => {
-    fetch('/api/health')
-      .then((r) => r.json())
-      .then(setHealth);
-  }, []);
-
-  return <pre>{JSON.stringify(health, null, 2)}</pre>;
-}
-```
-
-Example API route:
-
-```ts
-import type { NextApiRequest, NextApiResponse } from 'next';
-
-export default function handler(_req: NextApiRequest, res: NextApiResponse) {
-  res.status(200).json({ ok: true });
+  return <main>unicore service ready</main>;
 }
 ```

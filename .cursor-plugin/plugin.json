@@ -2,7 +2,7 @@
   "name": "unicore-skills",
   "displayName": "unicore skills",
   "description": "Internal engineering playbooks for recurring unicore workflows.",
-  "version": "0.2.0",
+  "version": "0.5.1",
   "author": {
     "name": "Universe Group - unicore"
   },
