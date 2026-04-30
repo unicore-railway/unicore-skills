@@ -1,1 +1,0 @@
-../../../skills/creating-github-repo-and-ci/SKILL.md

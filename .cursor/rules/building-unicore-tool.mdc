@@ -12,7 +12,7 @@ Use this rule as the orchestration entry point for the full workflow. Route to t
 1. `skills/bootstrapping-nextjs-service/SKILL.md`
 2. `skills/setting-up-prisma-postgres/SKILL.md`
 3. `skills/setting-up-nextauth-okta/SKILL.md`
-4. `skills/creating-github-repo-and-ci/SKILL.md`
+4. `skills/creating-github-repo/SKILL.md`
 5. `skills/deploying-to-railway/SKILL.md`
 
 If the user is non-technical or on a fresh laptop, run `skills/zero-to-running-tool/SKILL.md` before step 1.

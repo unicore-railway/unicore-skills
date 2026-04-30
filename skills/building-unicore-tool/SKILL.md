@@ -52,7 +52,7 @@ This is a recommendation, not a prerequisite.
 2. Use `setting-up-prisma-postgres` to add local PostgreSQL, Prisma, the initial schema, the database health check, and database scripts.
 3. Use `setting-up-nextauth-okta` to add Okta SSO via Auth.js v5, the auth health check, local env files, and onboarding steps.
 4. Use `setting-up-trpc` to add the tRPC server, typed client, auth-protected procedures, and the `[trpc].ts` catch-all handler. Every app-internal endpoint goes through here.
-5. Use `creating-github-repo-and-ci` to publish the repository and add the required verification checks.
+5. Use `creating-github-repo` to publish the repository to GitHub (always private) and apply the commit message convention. No GitHub Actions CI — Railway is the only deploy gate.
 6. Use `deploying-to-railway` to connect the repo to Railway, configure production variables, attach the custom domain, and set the Railway healthcheck path to `/api/health`.
 
 ## When to stay with this orchestrator
@@ -76,7 +76,6 @@ If the request is narrower, load only the matching sub-skill instead of the whol
 - [ ] `docker compose up -d` plus `npm run dev` works on a fresh clone
 - [ ] `npm run typecheck`, `npm run lint`, `npm run test`, and `npm run build` pass locally
 - [ ] `curl http://localhost:3000/api/health` returns `200` with every check `ok`
-- [ ] CI is green on `main`
 - [ ] Prisma migrations are committed and applied in production
 - [ ] The production Okta app has the correct callback URL
 - [ ] Railway has all required variables set (`AUTH_SECRET`, `AUTH_URL`, `AUTH_TRUST_HOST`, `OKTA_*`, `DATABASE_URL`)

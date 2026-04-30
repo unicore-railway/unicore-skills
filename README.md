@@ -58,7 +58,7 @@ Ask **Roman Shevchuk** (`roman.shevchuk@uni.tech`) to add you to the GitHub org 
 | [`setting-up-prisma-postgres`](skills/setting-up-prisma-postgres/SKILL.md) | Adding local PostgreSQL, Prisma, the initial schema, migration scripts, and the database health check. |
 | [`setting-up-nextauth-okta`](skills/setting-up-nextauth-okta/SKILL.md) | Adding Okta SSO via Auth.js v5 (`@auth/prisma-adapter`), the auth health check, plus local env and onboarding defaults. |
 | [`setting-up-trpc`](skills/setting-up-trpc/SKILL.md) | Adding tRPC v11 + TanStack Query as the only sanctioned client/server layer for app-internal endpoints. |
-| [`creating-github-repo-and-ci`](skills/creating-github-repo-and-ci/SKILL.md) | Publishing the repo to GitHub and adding the required CI checks. |
+| [`creating-github-repo`](skills/creating-github-repo/SKILL.md) | Publishing the repo to GitHub under `unicore-railway` (always private), the single-`main`-branch workflow (no PRs, no CI — Railway is the only deploy gate), and the Conventional Commits message convention. |
 | [`deploying-to-railway`](skills/deploying-to-railway/SKILL.md) | Connecting the service to Railway, configuring production settings, and attaching the custom domain. |
 
 ## Install from GitHub
@@ -120,6 +120,22 @@ Windsurf supports repo-local and global skills. For a GitHub-distributed repo, y
 ### GitHub Copilot
 
 Copilot uses repository files, not a separate plugin installer. The adapter installer above copies the needed files into the target repo.
+
+## Reliable triggering
+
+These skills under-trigger on conversational prompts. When a user says "build me a tool for the ops team", Claude often starts scaffolding directly instead of consulting the skill catalog — even when the description matches. Name the skill explicitly to guarantee the right playbook loads:
+
+- New internal unicore tool from scratch: "use `building-unicore-tool` to set up a new service".
+- Fresh machine or non-technical user: "use `zero-to-running-tool` first".
+- Narrower mid-build task: name the sub-skill (`bootstrapping-nextjs-service`, `setting-up-prisma-postgres`, `setting-up-nextauth-okta`, `setting-up-trpc`, `creating-github-repo`, `deploying-to-railway`).
+
+To get this priming automatically without remembering the skill name, add one line to your `~/.claude/CLAUDE.md`:
+
+```markdown
+When scaffolding a new internal service for Universe Group (unicore-railway / Railway-hosted), consult the `building-unicore-tool` skill before writing any code.
+```
+
+This was confirmed against a 20-query trigger eval: even the literal phrasing in the original description fired only 0–33% of the time on realistic prompts. The eval set and results live under [evals/building-unicore-tool/](/Users/romanshevchuk/Projects/unicore-skills/evals/building-unicore-tool/).
 
 ## Adding a new guide
 

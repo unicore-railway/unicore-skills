@@ -1,0 +1,14 @@
+---
+description: Use when publishing a new unicore service to GitHub. Covers private repo creation under unicore-railway, the single-branch workflow, and the commit message convention.
+alwaysApply: false
+---
+
+# Creating the GitHub repo
+
+Primary reference: `skills/creating-github-repo/SKILL.md`
+
+Use this rule for:
+
+- repo creation under `unicore-railway` — **always private** (`gh repo create --private`); never `--public`
+- the single `main` branch workflow — no feature branches, no pull requests, no GitHub Actions CI; Railway is the only deploy gate
+- the commit message convention — Conventional Commits (`feat:` / `fix:` / `chore:` / `docs:`), imperative tense, one logical change per commit

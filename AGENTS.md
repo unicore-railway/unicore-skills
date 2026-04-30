@@ -27,5 +27,5 @@ This repository packages internal engineering playbooks for multiple AI coding t
 - `skills/setting-up-prisma-postgres/SKILL.md`: add PostgreSQL, Prisma, migrations, and the DB health check
 - `skills/setting-up-nextauth-okta/SKILL.md`: add Okta SSO via Auth.js v5, the auth health check, and local env defaults
 - `skills/setting-up-trpc/SKILL.md`: add tRPC v11 + TanStack Query — the only sanctioned client/server layer for app-internal endpoints
-- `skills/creating-github-repo-and-ci/SKILL.md`: publish the repo and add CI
+- `skills/creating-github-repo/SKILL.md`: publish the repo to GitHub (always private, single `main` branch, no CI — Railway is the only deploy gate) and apply the commit message convention
 - `skills/deploying-to-railway/SKILL.md`: configure Railway, production variables, and the custom domain

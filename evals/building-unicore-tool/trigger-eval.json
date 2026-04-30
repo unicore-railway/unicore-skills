@@ -1,0 +1,82 @@
+[
+  {
+    "query": "hey, I'm building a new internal tool for the ops team to track vendor onboarding tickets. need to get it stood up on our railway setup with okta login. starting from scratch",
+    "should_trigger": true
+  },
+  {
+    "query": "ok so legal needs a small dashboard to view contract expirations from notion. zero to production - what's the playbook for unicore?",
+    "should_trigger": true
+  },
+  {
+    "query": "Sasha asked me to spin up a quick app for the finance team to query the warehouse — needs to be on railway under unicore-tools.io. where do I start?",
+    "should_trigger": true
+  },
+  {
+    "query": "I want to take this empty repo from zero to production on railway. it's gonna be the new approval workflow tool for HR",
+    "should_trigger": true
+  },
+  {
+    "query": "starting a brand new vibe-coded project for the recruiting team. should I just `gh repo create` or is there a setup flow?",
+    "should_trigger": true
+  },
+  {
+    "query": "set up a new service for Railway",
+    "should_trigger": true
+  },
+  {
+    "query": "I need to build a tiny tool that lets PMs file headcount requests. will live behind okta and run on railway like our other internal stuff. walk me through it",
+    "should_trigger": true
+  },
+  {
+    "query": "ok roman said I should use this repo's skills to bootstrap a new service. it's an internal admin panel for the marketing ops team. what's the order of operations?",
+    "should_trigger": true
+  },
+  {
+    "query": "I'm a PM and I want to build my own tool that pulls from the analytics warehouse and lets me approve campaign budgets. total greenfield. heard we have a railway setup at universe",
+    "should_trigger": true
+  },
+  {
+    "query": "create a new internal unicore tool",
+    "should_trigger": true
+  },
+  {
+    "query": "add tRPC to my existing project — Next.js + prisma already wired up but no api layer yet",
+    "should_trigger": false
+  },
+  {
+    "query": "I just got a new mac, gotta install everything to start working — node, docker, gh, what else for the unicore stack?",
+    "should_trigger": false
+  },
+  {
+    "query": "deploy my existing nextjs app to railway, it's already built and tested locally. just need the railway side",
+    "should_trigger": false
+  },
+  {
+    "query": "set up okta sso for our customer-facing marketing site at marketing.universe.tech",
+    "should_trigger": false
+  },
+  {
+    "query": "I'm starting a new open source CLI tool in Go, what's the recommended layout?",
+    "should_trigger": false
+  },
+  {
+    "query": "I need to add a /api/health endpoint to our existing service that pings prisma and okta — only that, don't touch anything else",
+    "should_trigger": false
+  },
+  {
+    "query": "we want to migrate our existing service from Vercel to Railway, it's already in production",
+    "should_trigger": false
+  },
+  {
+    "query": "create a new GitHub repo for the design team's icon library. just an npm package, no backend",
+    "should_trigger": false
+  },
+  {
+    "query": "I want to add prisma to my side project that uses sqlite right now. nothing fancy, weekend project",
+    "should_trigger": false
+  },
+  {
+    "query": "trying to debug why our existing railway deployment is OOM-ing on staging. nothing to do with bootstrapping",
+    "should_trigger": false
+  }
+]
