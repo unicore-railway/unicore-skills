@@ -286,3 +286,15 @@ export default function Home() {
   return <main>unicore service ready</main>;
 }
 ```
+
+## Run it locally
+
+Verify the bootstrap end-to-end before moving on to the next skill:
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:3000` in a browser — you should see the placeholder page. Hit `http://localhost:3000/api/health` and you should get `200` with `{ status: 'ok', checks: [...] }` (only the `app` check at this stage; later skills append `database`, `auth`, etc.).
+
+Keep `npm run dev` running while you work. It hot-reloads on every save, so editing a file and refreshing the browser is the fastest feedback loop and the live preview you'll use throughout development. Once the service is published to GitHub, the full edit → preview → commit → push → auto-deploy loop is documented in `creating-github-repo` under "Day-to-day workflow".

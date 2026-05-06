@@ -83,3 +83,7 @@ If the request is narrower, load only the matching sub-skill instead of the whol
 - [ ] `<service>.railway.unicore-tools.io` resolves and serves the app
 - [ ] Okta sign-in works end to end in production
 - [ ] The repo `README.md` includes local onboarding steps
+
+## After launch
+
+Once the launch checklist is green, the team's recurring loop is **edit → preview → commit → push → auto-deploy**. The full step-by-step is documented in `creating-github-repo` under "Day-to-day workflow" — point engineers there, especially non-engineers who haven't yet internalized that `git push` is the deploy.

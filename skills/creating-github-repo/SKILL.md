@@ -82,3 +82,38 @@ docs: explain how to add a health check
 - Skip the body for trivial commits. For non-trivial ones, add a short paragraph explaining *why* the change was needed.
 
 This convention is unenforced — there is no commit-lint hook — but agents and reviewers should follow it. Consistent prefixes make `git log` readable and make it easy to spot what changed in any given window.
+
+## Day-to-day workflow
+
+Once the service is live, the recurring loop for shipping a change is:
+
+1. **Keep `npm run dev` running** in one terminal. It hot-reloads on save and serves at `http://localhost:3000` — that is your live preview. Open the browser side-by-side with your editor.
+
+2. **Edit and save.** Watch the preview to confirm the change actually works before recording it in git. Use the dev server as a safety check, not just a final demo.
+
+3. **Run the local checks** when you have a logical chunk ready (or right before pushing — pick one habit and stick with it):
+
+   ```bash
+   npm run typecheck && npm run lint && npm run test && npm run build
+   ```
+
+   Skipping this is the most common cause of failed Railway deploys.
+
+4. **Commit** with a Conventional Commits prefix (see the section above):
+
+   ```bash
+   git add -A
+   git commit -m "feat: add vendor onboarding form"
+   ```
+
+5. **Push to GitHub:**
+
+   ```bash
+   git push
+   ```
+
+   ⚠️ **`git push` is the deploy.** There is no staging environment in this workflow. The moment the commit lands on `main`, Railway pulls it, runs `npm run build`, and — if the build succeeds and `/api/health` returns `200` — replaces the live version. If anything fails, the previous deploy keeps serving and you'll see a red status in the Railway dashboard.
+
+6. **Watch the deploy** in the Railway dashboard's deploy log for ~30–90 seconds. A green deploy plus a healthy `/api/health` means production is now serving your change.
+
+If you want to commit work-in-progress without deploying it, that is fine — local commits are private until you `git push`. You can stack several commits locally and push them together as a batch.
