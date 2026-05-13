@@ -84,19 +84,10 @@ brew install gh
 ssh-keygen -t ed25519 -C "your.email@uni.tech"
 ```
 
-When prompted for a passphrase, **set one** — this protects the key if the laptop is lost or compromised. On macOS, add it to Keychain so it survives reboots without re-entering the passphrase every time:
+When asked for a passphrase, set one — it protects the key if the laptop is lost. macOS Keychain remembers it, so you won't need to type it again:
 
 ```bash
 ssh-add --apple-use-keychain ~/.ssh/id_ed25519
-```
-
-Also add this to `~/.ssh/config` so macOS reloads the key from Keychain automatically after a reboot:
-
-```
-Host github.com
-  AddKeysToAgent yes
-  UseKeychain yes
-  IdentityFile ~/.ssh/id_ed25519
 ```
 
 **Upload the key to GitHub and configure `gh` to use SSH:**
