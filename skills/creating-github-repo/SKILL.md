@@ -1,6 +1,6 @@
 ---
 name: creating-github-repo
-description: Use when publishing a new unicore service to GitHub. Covers private repo creation under unicore-railway, the single-branch workflow, and the commit message convention.
+description: Use when uploading, publishing, or pushing a local project folder to GitHub under unicore-railway. Covers private repo creation, the single-branch workflow, and the commit message convention.
 ---
 
 # Creating the GitHub repo
