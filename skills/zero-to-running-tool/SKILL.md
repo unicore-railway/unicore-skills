@@ -70,22 +70,37 @@ docker ps
 
 Expect a header row with no containers and no error. If you see `Cannot connect to the Docker daemon`, run `colima start` again and re-verify.
 
-## 3. GitHub CLI and `unicore-railway` org access
+## 3. GitHub CLI, SSH key, and `unicore-railway` org access
 
-Why: unicore services live in the [`unicore-railway`](https://github.com/unicore-railway) GitHub org. Without org membership, repo creation fails.
+Why: unicore services live in the [`unicore-railway`](https://github.com/unicore-railway) GitHub org. Without org membership, repo creation fails. SSH keys are required — all Git operations use SSH, not HTTPS.
 
 ```bash
 brew install gh
-gh auth login
 ```
 
-Recommend HTTPS + browser auth when prompted — it is the simplest flow for non-engineers.
+**Generate an SSH key** (skip if one already exists at `~/.ssh/id_ed25519`):
+
+```bash
+ssh-keygen -t ed25519 -C "your.email@uni.tech"
+ssh-add ~/.ssh/id_ed25519
+```
+
+**Upload the key to GitHub and configure `gh` to use SSH:**
+
+```bash
+gh auth login --git-protocol ssh
+gh ssh-key add ~/.ssh/id_ed25519.pub --title "$(hostname)"
+gh config set git_protocol ssh
+```
 
 **Verify auth:**
 
 ```bash
 gh auth status
+ssh -T git@github.com
 ```
+
+Expect `Hi <username>! You've successfully authenticated` from the `ssh` check.
 
 **Verify org membership:**
 

@@ -36,6 +36,20 @@ gh repo create unicore-railway/my-service \
 The `--private` flag is required.
 The `git branch -M main` step is also required so Railway auto-deploy targets the same default branch.
 
+**Verify the remote uses SSH, not HTTPS:**
+
+```bash
+git remote -v
+```
+
+The URL must start with `git@github.com:`, not `https://`. If it shows HTTPS, fix it:
+
+```bash
+git remote set-url origin git@github.com:unicore-railway/my-service.git
+```
+
+If `gh config set git_protocol ssh` was run during machine setup (see `zero-to-running-tool`), `gh repo create` sets the SSH remote automatically.
+
 ## Single `main` branch — no PRs, no CI
 
 These are vibe-coded internal tools, often built by non-engineers. The workflow is intentionally simple:
