@@ -1,4 +1,5 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "unicore-skills",
   "owner": {
     "name": "Universe Group - unicore"
@@ -10,13 +11,16 @@
   "plugins": [
     {
       "name": "unicore-skills",
-      "source": "./",
       "description": "Internal engineering process guides packaged as Claude Code skills.",
       "version": "0.5.1",
       "author": {
         "name": "Universe Group - unicore"
       },
       "category": "productivity",
+      "source": {
+        "source": "git-subdir",
+        "path": "skills"
+      },
       "keywords": ["skills", "internal-tools", "railway", "nextjs", "unicore"]
     }
   ]
