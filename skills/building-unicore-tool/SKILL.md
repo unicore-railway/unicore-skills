@@ -20,6 +20,7 @@ The house defaults are:
 - Auth.js v5 (`next-auth@5.x` + `@auth/prisma-adapter`) with Okta OIDC
 - tRPC v11 + TanStack Query as the only sanctioned client/server layer for app-internal endpoints
 - GitHub repo under `unicore-railway`, **always private** (never `--public`)
+- Railway deployment is **always GitHub-connected** — never `railway up`
 - Railway production deployment under `railway.unicore-tools.io`
 
 ## Access prerequisites

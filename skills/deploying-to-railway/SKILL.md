@@ -15,11 +15,21 @@ If you don't have access yet, ask **Roman Shevchuk** (`roman.shevchuk@uni.tech`)
 
 Make sure the **Universe Unicore** workspace is selected in Railway before creating the project — otherwise the project lands in a personal workspace and won't be on the paid plan.
 
+## Deployment method — always GitHub-connected
+
+**Never use `railway up`.** That command uploads files directly from your local machine and bypasses the GitHub-connected deploy pipeline. It breaks auto-deploy, leaves no audit trail in git, and is easy to forget to run when things change.
+
+The only sanctioned deploy path is:
+1. Push to `main` on GitHub.
+2. Railway detects the push and runs the build automatically.
+
+This means the Railway service **must be connected to the GitHub repo before the first real deploy**.
+
 ## Create the Railway project
 
 In Railway:
 
-1. Create a new project from the GitHub repo `unicore-railway/my-service`.
+1. Create a new project and connect it to the GitHub repo `unicore-railway/my-service` (not an empty project — connect the repo immediately).
 2. Let Railway create the `web` service.
 3. Add a PostgreSQL service in the same Railway project.
 
@@ -82,9 +92,10 @@ Use:
 
 ## Auto-deploy
 
-- Deploy automatically on pushes to `main`
+- Deploy automatically on pushes to `main` — this is the **only** deploy mechanism
 - Use production only
 - Do not create staging or preview environments by default
+- Never use `railway up` — see "Deployment method" above
 
 ## Healthcheck
 
