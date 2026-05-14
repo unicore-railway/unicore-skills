@@ -25,6 +25,10 @@ The only sanctioned deploy path is:
 
 This means the Railway service **must be connected to the GitHub repo before the first real deploy**.
 
+## Naming
+
+The Railway project name must match the GitHub repo name exactly (e.g. if the repo is `unicore-railway/vendor-portal`, the Railway project is also `vendor-portal`). This keeps the two in sync and makes it obvious which Railway project belongs to which repo.
+
 ## Create the Railway project
 
 In Railway:
