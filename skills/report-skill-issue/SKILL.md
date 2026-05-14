@@ -28,30 +28,35 @@ Before running the command, gather:
 gh issue create \
   --repo unicore-railway/unicore-skills \
   --title "<skill-name>: <one-line description of the problem>" \
-  --body "## Skill
-<skill-name>
-
-## Step
-<section heading or step number>
-
-## What went wrong
+  --body "## What went wrong
 <exact error message or description>
 
 ## What was tried
 <any attempted fixes>
 
-## Service
-<service name>
+## Details
 
-## GitHub repo
-<unicore-railway/service-name>
-
-## Commit
-<git rev-parse HEAD output>
-
-## Environment
-<OS, Node version, tool versions>" \
+| Field | Value |
+|---|---|
+| Skill | \`<skill-name>\` |
+| Step | <section heading or step number> |
+| Service | \`<service-name>\` |
+| Repo | [unicore-railway/<service-name>](https://github.com/unicore-railway/<service-name>) |
+| Commit | [<short-sha>](https://github.com/unicore-railway/<service-name>/commit/<full-sha>) |
+| OS | <uname -sr> |
+| Node | <node -v> |
+| Railway CLI | <railway --version> |" \
   --label "bug"
+```
+
+Collect the values beforehand:
+
+```bash
+git rev-parse HEAD          # full SHA for the commit link
+git rev-parse --short HEAD  # short SHA for display
+uname -sr                   # OS
+node -v
+railway --version
 ```
 
 **Title format:** `<skill-name>: <problem>` — for example:
