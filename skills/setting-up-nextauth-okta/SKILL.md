@@ -1,6 +1,6 @@
 ---
 name: setting-up-nextauth-okta
-description: Use when a unicore internal service needs Okta SSO through Auth.js (NextAuth v5), including local env files and developer onboarding steps.
+description: Use when adding auth, login, logout, registration, or access control to a unicore service. Covers Okta SSO via Auth.js (NextAuth v5), local env setup, and onboarding steps. Triggers on "add login", "restrict access", "only logged-in users", "add authentication", or any request to protect pages or routes.
 ---
 
 # Setting up Auth.js (NextAuth v5) and Okta
