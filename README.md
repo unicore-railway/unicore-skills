@@ -62,6 +62,7 @@ Ask **Roman Shevchuk** (`roman.shevchuk@uni.tech`) to add you to the GitHub org 
 | [`setting-up-trpc`](skills/setting-up-trpc/SKILL.md) | Adding tRPC v11 + TanStack Query as the only sanctioned client/server layer for app-internal endpoints. |
 | [`creating-github-repo`](skills/creating-github-repo/SKILL.md) | Publishing the repo to GitHub under `unicore-railway` (always private), the single-`main`-branch workflow (no PRs, no CI — Railway is the only deploy gate), and the Conventional Commits message convention. |
 | [`deploying-to-railway`](skills/deploying-to-railway/SKILL.md) | Connecting the service to Railway, configuring production settings, and attaching the custom domain. |
+| [`report-skill-issue`](skills/report-skill-issue/SKILL.md) | File a GitHub issue when any unicore skill fails or gives incorrect guidance. Self-healing: agents invoke this automatically on unrecoverable errors. |
 
 ## Reliable triggering
 
