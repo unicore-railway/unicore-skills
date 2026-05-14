@@ -31,11 +31,13 @@ The Railway project name must match the GitHub repo name exactly (e.g. if the re
 
 ## Create the Railway project
 
-In Railway:
+```bash
+railway init --name <service-name>
+railway add --repo unicore-railway/<service-name>
+railway add --database postgresql
+```
 
-1. Create a new project and connect it to the GitHub repo `unicore-railway/my-service` (not an empty project — connect the repo immediately).
-2. Let Railway create the `web` service.
-3. Add a PostgreSQL service in the same Railway project.
+`railway add --repo` creates the `web` service and connects GitHub for auto-deploy in one step. `railway add --database postgresql` adds PostgreSQL in the same project.
 
 Keep `web` and `postgres` in one Railway project.
 
