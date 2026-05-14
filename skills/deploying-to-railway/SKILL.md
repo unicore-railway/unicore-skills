@@ -114,10 +114,13 @@ Railway uses this signal to gate traffic during deploys — a failed healthcheck
 
 ## Custom domain
 
-1. Add `<service>.unicore-railway.io` as a custom domain.
-2. Create the CNAME record in the `unicore-railway.io` DNS zone.
-3. Wait for the certificate to issue.
-4. Confirm `AUTH_URL` and the production Okta callback URLs match the custom domain.
+`unicore-railway.io` is purchased and managed by Railway, so DNS is handled automatically — no manual CNAME step needed.
+
+```bash
+railway domain <service-name>.unicore-railway.io -s <service-name>
+```
+
+Wait for the certificate to issue, then confirm `AUTH_URL` and the production Okta callback URLs match the custom domain.
 
 ## Logging baseline
 
