@@ -75,7 +75,7 @@ Marketplace install:
 
 ```bash
 /plugin marketplace add unicore-railway/unicore-skills
-/plugin install unicore-skills@unicore-railway
+/plugin install unicore-skills@unicore-skills
 ```
 
 Local iteration:
