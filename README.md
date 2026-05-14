@@ -1,5 +1,7 @@
 # unicore-skills
 
+**[Installation →](docs/INSTALL.md)**
+
 Reusable internal engineering playbooks for the **Universe Group** Head Office (`unicore`), packaged so the same guidance can be consumed by multiple AI coding tools.
 
 Scope: this org ([`unicore-railway`](https://github.com/unicore-railway)) is dedicated to internal company projects that are **vibe-coded** and **hosted on Railway**. Skills here encode the conventions, defaults, and access flows specific to that setup.
@@ -60,66 +62,6 @@ Ask **Roman Shevchuk** (`roman.shevchuk@uni.tech`) to add you to the GitHub org 
 | [`setting-up-trpc`](skills/setting-up-trpc/SKILL.md) | Adding tRPC v11 + TanStack Query as the only sanctioned client/server layer for app-internal endpoints. |
 | [`creating-github-repo`](skills/creating-github-repo/SKILL.md) | Publishing the repo to GitHub under `unicore-railway` (always private), the single-`main`-branch workflow (no PRs, no CI — Railway is the only deploy gate), and the Conventional Commits message convention. |
 | [`deploying-to-railway`](skills/deploying-to-railway/SKILL.md) | Connecting the service to Railway, configuring production settings, and attaching the custom domain. |
-
-## Install from GitHub
-
-Detailed platform notes:
-
-- Codex: [docs/README.codex.md](/Users/romanshevchuk/Projects/unicore-skills/docs/README.codex.md)
-- Cursor: [docs/README.cursor.md](/Users/romanshevchuk/Projects/unicore-skills/docs/README.cursor.md)
-- Architecture: [docs/ARCHITECTURE.md](/Users/romanshevchuk/Projects/unicore-skills/docs/ARCHITECTURE.md)
-
-### Claude Code
-
-Marketplace install:
-
-```bash
-/plugin marketplace add unicore-railway/unicore-skills
-/plugin install unicore-skills@unicore-skills
-```
-
-Local iteration:
-
-```bash
-claude --plugin-dir /path/to/unicore-skills
-```
-
-This now works because the repository includes [.claude-plugin/marketplace.json](/Users/romanshevchuk/Projects/unicore-skills/.claude-plugin/marketplace.json) in addition to the plugin manifest.
-
-### Codex
-
-Codex uses native skill discovery well with a clone-and-symlink flow. The install instructions live in [.codex/INSTALL.md](/Users/romanshevchuk/Projects/unicore-skills/.codex/INSTALL.md).
-
-### Cursor
-
-Cursor now has a first-class plugin manifest in [.cursor-plugin/plugin.json](/Users/romanshevchuk/Projects/unicore-skills/.cursor-plugin/plugin.json). For private/internal use before marketplace publishing, use repo-local adapters:
-
-```bash
-git clone https://github.com/unicore-railway/unicore-skills.git
-bash unicore-skills/scripts/install-consumer-adapters.sh /path/to/target-repo
-```
-
-That installs:
-
-- `.agents/skills/`
-- `.cursor/rules/`
-- `AGENTS.md`
-- `.github/copilot-instructions.md`
-- `.windsurf/skills/`
-
-Marketplace and local-install notes live in [.cursor-plugin/INSTALL.md](/Users/romanshevchuk/Projects/unicore-skills/.cursor-plugin/INSTALL.md).
-
-### Windsurf
-
-Windsurf supports repo-local and global skills. For a GitHub-distributed repo, you can either:
-
-- commit `.windsurf/skills/` into the target repo
-- use the adapter installer above
-- or clone/copy the `.agents/skills/` or `.windsurf/skills/` folders into a workspace
-
-### GitHub Copilot
-
-Copilot uses repository files, not a separate plugin installer. The adapter installer above copies the needed files into the target repo.
 
 ## Reliable triggering
 

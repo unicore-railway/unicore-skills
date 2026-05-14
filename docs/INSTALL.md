@@ -1,0 +1,53 @@
+# Installation
+
+## Claude Code
+
+Marketplace install:
+
+```bash
+/plugin marketplace add unicore-railway/unicore-skills
+/plugin install unicore-skills@unicore-skills
+```
+
+Local iteration:
+
+```bash
+claude --plugin-dir /path/to/unicore-skills
+```
+
+The repository includes [.claude-plugin/marketplace.json](../.claude-plugin/marketplace.json) in addition to the plugin manifest.
+
+## Codex
+
+Codex uses native skill discovery well with a clone-and-symlink flow. The install instructions live in [.codex/INSTALL.md](../.codex/INSTALL.md).
+
+## Cursor
+
+Cursor has a first-class plugin manifest in [.cursor-plugin/plugin.json](../.cursor-plugin/plugin.json). For private/internal use before marketplace publishing, use repo-local adapters:
+
+```bash
+git clone git@github.com:unicore-railway/unicore-skills.git
+bash unicore-skills/scripts/install-consumer-adapters.sh /path/to/target-repo
+```
+
+That installs:
+
+- `.agents/skills/`
+- `.cursor/rules/`
+- `AGENTS.md`
+- `.github/copilot-instructions.md`
+- `.windsurf/skills/`
+
+Marketplace and local-install notes live in [.cursor-plugin/INSTALL.md](../.cursor-plugin/INSTALL.md).
+
+## Windsurf
+
+Windsurf supports repo-local and global skills. For a GitHub-distributed repo, you can either:
+
+- commit `.windsurf/skills/` into the target repo
+- use the adapter installer above
+- or clone/copy the `.agents/skills/` or `.windsurf/skills/` folders into a workspace
+
+## GitHub Copilot
+
+Copilot uses repository files, not a separate plugin installer. The adapter installer above copies the needed files into the target repo.
