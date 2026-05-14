@@ -1,6 +1,6 @@
 ---
 name: building-unicore-tool
-description: Use when starting a brand-new internal unicore tool or service that should go from an empty repository to production on Railway. Triggers on phrasings like "create a new internal tool", "set up a new service for Railway", "new project to Railway", or "take this app from zero to production".
+description: "Use this skill any time the user wants to build something new AND get it live on Railway — regardless of what it is (game, dashboard, form, tracker, kanban board, internal tool, web app, or anything else). This is the required skill for all zero-to-Railway workflows because it enforces company conventions: unicore-railway GitHub org, GitHub-connected deploys, and the standard Next.js + Prisma + Auth stack. Trigger on any phrasing that combines building with Railway hosting: 'create X and publish/deploy/ship/host it on railway', 'build X and put it on railway', 'new project to railway', 'take this from zero to a live URL on railway'. Also use when publishing a local project to GitHub under unicore-railway, or when setting up Okta SSO as part of a new service. Do not use for purely operational tasks on an already-running service (debugging crashes, updating env vars, scaling)."
 ---
 
 # Building a unicore tool
