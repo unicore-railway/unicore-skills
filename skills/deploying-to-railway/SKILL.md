@@ -1,6 +1,6 @@
 ---
 name: deploying-to-railway
-description: Use when a unicore service is ready to connect to Railway, configure production settings, and attach its railway.unicore-tools.io domain.
+description: Use when a unicore service is ready to connect to Railway, configure production settings, and attach its unicore-railway.io domain.
 ---
 
 # Deploying to Railway
@@ -51,8 +51,8 @@ Send the admin this request, replacing `<service-name>`:
 >
 > - **App name**: `<service-name> (prod)`
 > - **App type**: OIDC — Web Application
-> - **Sign-in redirect URI**: `https://<service-name>.railway.unicore-tools.io/api/auth/callback/okta`
-> - **Sign-out redirect URI**: `https://<service-name>.railway.unicore-tools.io`
+> - **Sign-in redirect URI**: `https://<service-name>.unicore-railway.io/api/auth/callback/okta`
+> - **Sign-out redirect URI**: `https://<service-name>.unicore-railway.io`
 > - **Assigned group**: the internal unicore group used for internal tools (same group as the dev app)
 >
 > Please send the **Client ID** and **Client Secret** through 1Password / Bitwarden — secret is sensitive.
@@ -64,8 +64,8 @@ When the admin replies, paste the values directly into Railway's variables UI fo
 Repeat the dev-app steps from `setting-up-nextauth-okta` with these differences:
 
 - App integration name: `<service-name> (prod)`
-- Sign-in redirect URI: `https://<service-name>.railway.unicore-tools.io/api/auth/callback/okta`
-- Sign-out redirect URI: `https://<service-name>.railway.unicore-tools.io`
+- Sign-in redirect URI: `https://<service-name>.unicore-railway.io/api/auth/callback/okta`
+- Sign-out redirect URI: `https://<service-name>.unicore-railway.io`
 
 Send the Client ID and Client Secret through a secure channel.
 
@@ -77,7 +77,7 @@ Set these on the `web` service:
 | --- | --- |
 | `DATABASE_URL` | `${{Postgres.DATABASE_URL}}` |
 | `AUTH_SECRET` | fresh `openssl rand -base64 32` output |
-| `AUTH_URL` | `https://<service>.railway.unicore-tools.io` |
+| `AUTH_URL` | `https://<service>.unicore-railway.io` |
 | `AUTH_TRUST_HOST` | `true` (Railway terminates TLS in front of the app) |
 | `OKTA_CLIENT_ID` | production Okta app client ID |
 | `OKTA_CLIENT_SECRET` | production Okta app client secret |
@@ -114,8 +114,8 @@ Railway uses this signal to gate traffic during deploys — a failed healthcheck
 
 ## Custom domain
 
-1. Add `<service>.railway.unicore-tools.io` as a custom domain.
-2. Create the CNAME record in the `unicore-tools.io` DNS zone.
+1. Add `<service>.unicore-railway.io` as a custom domain.
+2. Create the CNAME record in the `unicore-railway.io` DNS zone.
 3. Wait for the certificate to issue.
 4. Confirm `AUTH_URL` and the production Okta callback URLs match the custom domain.
 

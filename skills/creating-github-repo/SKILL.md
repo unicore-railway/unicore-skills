@@ -13,7 +13,7 @@ Use this skill once the local project structure is ready to publish.
 
 Why:
 
-- Repos reference internal Okta apps, internal domains (`*.railway.unicore-tools.io`), and Railway service names.
+- Repos reference internal Okta apps, internal domains (`*.unicore-railway.io`), and Railway service names.
 - They may contain references to internal data models, internal users, and access patterns.
 - Public visibility is reserved for clearly intended OSS work (e.g. this `unicore-skills` repo) — service repos are not that.
 

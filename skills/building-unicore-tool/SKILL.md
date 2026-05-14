@@ -21,7 +21,7 @@ The house defaults are:
 - tRPC v11 + TanStack Query as the only sanctioned client/server layer for app-internal endpoints
 - GitHub repo under `unicore-railway`, **always private** (never `--public`)
 - Railway deployment is **always GitHub-connected** — never `railway up`
-- Railway production deployment under `railway.unicore-tools.io`
+- Railway production deployment under `unicore-railway.io`
 
 ## Access prerequisites
 
@@ -81,7 +81,7 @@ If the request is narrower, load only the matching sub-skill instead of the whol
 - [ ] The production Okta app has the correct callback URL
 - [ ] Railway has all required variables set (`AUTH_SECRET`, `AUTH_URL`, `AUTH_TRUST_HOST`, `OKTA_*`, `DATABASE_URL`)
 - [ ] Railway healthcheck path is set to `/api/health`
-- [ ] `<service>.railway.unicore-tools.io` resolves and serves the app
+- [ ] `<service>.unicore-railway.io` resolves and serves the app
 - [ ] Okta sign-in works end to end in production
 - [ ] The repo `README.md` includes local onboarding steps
 
