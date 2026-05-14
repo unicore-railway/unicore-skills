@@ -17,6 +17,15 @@ claude --plugin-dir /path/to/unicore-skills
 
 The repository includes [.claude-plugin/marketplace.json](../.claude-plugin/marketplace.json) in addition to the plugin manifest.
 
+## Claude Desktop
+
+1. Open Claude Desktop → **Customize** → **Directory** → **Plugins**.
+2. Click **Your organization** tab.
+3. Add the marketplace using the GitHub repo: `unicore-railway/unicore-skills`.
+4. The `unicore-skills` plugin will appear — click **Install**.
+
+The plugin is powered by [.claude-plugin/marketplace.json](../.claude-plugin/marketplace.json). If the plugin doesn't appear after adding the marketplace, remove it and re-add it to force a refresh.
+
 ## Codex
 
 Codex uses native skill discovery well with a clone-and-symlink flow. The install instructions live in [.codex/INSTALL.md](../.codex/INSTALL.md).
