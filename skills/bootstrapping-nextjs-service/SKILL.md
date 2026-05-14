@@ -11,7 +11,7 @@ _Last verified against current tooling: **2026-04-24**._
 
 ## Prerequisites
 
-- Node.js 24 LTS
+- Node.js 22 or 24 LTS (24 preferred)
 - npm 11+
 - Colima installed and running with the Docker runtime
 
@@ -53,7 +53,7 @@ Pin Node:
 
 ```bash
 echo "24" > .nvmrc
-npm pkg set engines.node=">=24.0.0"
+npm pkg set engines.node=">=22.0.0"
 ```
 
 ## Tighten TypeScript

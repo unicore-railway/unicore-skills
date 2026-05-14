@@ -33,11 +33,10 @@ The Railway project name must match the GitHub repo name exactly (e.g. if the re
 
 ```bash
 railway init --name <service-name>
-railway add --repo unicore-railway/<service-name>
 railway add --database postgresql
 ```
 
-`railway add --repo` creates the `web` service and connects GitHub for auto-deploy in one step. `railway add --database postgresql` adds PostgreSQL in the same project.
+**Connect the GitHub repo via the Railway dashboard** — the CLI (`railway add --repo`) fails with an auth error because the Railway token doesn't carry the GitHub OAuth scope. In the dashboard: open the project → Add Service → GitHub Repo → select `unicore-railway/<service-name>`.
 
 Keep `web` and `postgres` in one Railway project.
 
@@ -91,10 +90,11 @@ Railway variables are the source of truth for production secrets. Names follow t
 
 Use:
 
-- Build: `npm ci && npx prisma generate && npx prisma migrate deploy && npm run build`
+- Build: `npm ci && npm run build` — for services without Prisma
+- Build: `npm ci && npx prisma generate && npx prisma migrate deploy && npm run build` — for services with Prisma
 - Start: `npm start`
 
-`prisma migrate deploy` is expected on each deploy.
+Use the Prisma build command only when the service has a database. `prisma migrate deploy` is expected on each deploy.
 
 ## Auto-deploy
 
@@ -118,9 +118,7 @@ Railway uses this signal to gate traffic during deploys — a failed healthcheck
 
 `unicore-railway.io` is purchased and managed by Railway, so DNS is handled automatically — no manual CNAME step needed.
 
-```bash
-railway domain <service-name>.unicore-railway.io -s <service-name>
-```
+**Custom domain management requires workspace admin access.** The CLI (`railway domain`) fails with an auth error for non-owners. Use the Railway dashboard: open the service → Settings → Domains → Add Domain → enter `<service-name>.unicore-railway.io`.
 
 Wait for the certificate to issue, then confirm `AUTH_URL` and the production Okta callback URLs match the custom domain.
 

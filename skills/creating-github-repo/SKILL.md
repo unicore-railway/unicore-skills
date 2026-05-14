@@ -22,7 +22,7 @@ Never run `gh repo create ... --public` for a `unicore-railway` service repo, an
 ## Create the repository
 
 ```bash
-git init
+git init          # skip if create-next-app already ran — it initialises git automatically
 git branch -M main
 git add -A
 git commit -m "chore: initial commit"
@@ -34,7 +34,7 @@ gh repo create unicore-railway/my-service \
 ```
 
 The `--private` flag is required.
-The `git branch -M main` step is also required so Railway auto-deploy targets the same default branch.
+The `git branch -M main` step is required so Railway auto-deploy targets the same default branch.
 
 **Verify the remote uses SSH, not HTTPS:**
 

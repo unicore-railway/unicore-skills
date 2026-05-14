@@ -67,6 +67,14 @@ Use this skill when the request is broad, such as:
 
 If the request is narrower, load only the matching sub-skill instead of the whole workflow.
 
+**Which sub-skills to skip:**
+
+| Skip | When |
+| --- | --- |
+| `setting-up-prisma-postgres` | No persistent data (no database needed) |
+| `setting-up-nextauth-okta` | No login or access control needed |
+| `setting-up-trpc` | No app-internal API calls between client and server |
+
 ## Ready-to-ship checklist
 
 - [ ] `.env.example` documents every required variable
