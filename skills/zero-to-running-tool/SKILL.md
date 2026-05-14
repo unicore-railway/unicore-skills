@@ -172,6 +172,18 @@ If every command succeeds, the machine is ready.
 
 Tell the user in plain language: "Your machine is set up. I'll now start the project."
 
+## Recommended companion plugin
+
+The Railway plugin gives agents direct Railway API access during deployments. It is optional — install it in Claude Code once the machine is ready:
+
+```bash
+/plugin marketplace add railwayapp/railway-skills
+/plugin install railway@railway-skills
+claude mcp add railway-mcp-server -- npx -y @railway/mcp-server
+```
+
+Use the Railway plugin for general Railway API queries (logs, status, env vars). Use the unicore `deploying-to-railway` skill for all deployment steps.
+
 ## Common failure modes
 
 - **`gh auth login` browser closes early.** Re-run it; choose "Login with a web browser" again. If browser auth keeps failing, fall back to "Paste an authentication token" with a personal access token scoped to `repo` and `read:org`.

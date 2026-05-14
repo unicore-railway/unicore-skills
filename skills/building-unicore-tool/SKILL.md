@@ -38,14 +38,21 @@ If the user is non-technical (PM, finance, legal, ops) or is starting from a fre
 
 Skip `zero-to-running-tool` only when you have already verified that `node -v`, `docker ps`, `gh api user/orgs` (returns `unicore-railway`), and `railway whoami` all succeed.
 
-## Recommended companion plugin
+## Recommended companion plugins
 
 Recommend installing [`obra/superpowers`](https://github.com/obra/superpowers) as a general-purpose productivity plugin for the engineer or agent doing the setup.
 
-Use `superpowers` for broad coding acceleration and reusable cross-tool workflows.
-Use `unicore-skills` for company-specific conventions, deployment defaults, and internal process guardrails.
+Recommend installing the [Railway plugin](https://github.com/railwayapp/railway-skills) for direct Railway API access (deploy status, logs, env vars, domains):
 
-This is a recommendation, not a prerequisite.
+```bash
+/plugin marketplace add railwayapp/railway-skills
+/plugin install railway@railway-skills
+claude mcp add railway-mcp-server -- npx -y @railway/mcp-server
+```
+
+Use the Railway plugin for general Railway API queries. Use `deploying-to-railway` for all deployment steps — it enforces unicore conventions that `use-railway` does not know about.
+
+These are recommendations, not prerequisites.
 
 ## Skill sequence
 

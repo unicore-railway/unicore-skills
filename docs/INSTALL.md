@@ -17,6 +17,23 @@ claude --plugin-dir /path/to/unicore-skills
 
 The repository includes [.claude-plugin/marketplace.json](../.claude-plugin/marketplace.json) in addition to the plugin manifest.
 
+### Recommended companion: Railway plugin
+
+The official Railway plugin gives agents direct Railway API access (deploy status, logs, env vars, domains). Install it alongside unicore-skills:
+
+```bash
+/plugin marketplace add railwayapp/railway-skills
+/plugin install railway@railway-skills
+```
+
+Then add the Railway MCP server:
+
+```bash
+claude mcp add railway-mcp-server -- npx -y @railway/mcp-server
+```
+
+Use the Railway plugin for general Railway API queries. Use the unicore `deploying-to-railway` skill for all deployment steps — it enforces company conventions that `use-railway` does not know about.
+
 ## Claude Desktop
 
 1. Open Claude Desktop → **Customize** → **Directory** → **Plugins**.
