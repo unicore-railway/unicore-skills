@@ -18,6 +18,9 @@ Before running the command, gather:
 3. **What went wrong** — the exact error message or unexpected behavior
 4. **What you tried** — any steps taken to resolve it
 5. **Environment** — OS, Node version, relevant tool versions (`railway --version`, `gh --version`, etc.)
+6. **Service name** — the Railway/GitHub service name being worked on (e.g. `vendor-portal`)
+7. **GitHub repo** — full repo path (e.g. `unicore-railway/vendor-portal`); run `git remote get-url origin` if unsure
+8. **Commit** — the current HEAD commit; run `git rev-parse HEAD` to get it
 
 ## File the issue
 
@@ -36,6 +39,15 @@ gh issue create \
 
 ## What was tried
 <any attempted fixes>
+
+## Service
+<service name>
+
+## GitHub repo
+<unicore-railway/service-name>
+
+## Commit
+<git rev-parse HEAD output>
 
 ## Environment
 <OS, Node version, tool versions>" \
