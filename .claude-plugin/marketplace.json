@@ -17,10 +17,7 @@
         "name": "Universe Group - unicore"
       },
       "category": "productivity",
-      "source": {
-        "source": "git-subdir",
-        "path": "skills"
-      },
+      "source": "./skills/",
       "keywords": ["skills", "internal-tools", "railway", "nextjs", "unicore"]
     }
   ]
