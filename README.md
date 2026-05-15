@@ -1,6 +1,6 @@
 # unicore-skills
 
-**[Installation →](docs/INSTALL.md)**
+**[unicore-railway.io](https://unicore-railway.io)** · **[Installation →](docs/INSTALL.md)**
 
 Reusable internal engineering playbooks for the **Universe Group** Head Office (`unicore`), packaged so the same guidance can be consumed by multiple AI coding tools.
 
