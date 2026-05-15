@@ -9,7 +9,7 @@ Use this skill after the base Next.js service exists and needs a local database 
 
 ## Local PostgreSQL
 
-Assume a Docker-compatible local runtime is already available. The default recommendation for macOS is Colima with the Docker CLI.
+Assume Docker Desktop is installed and running.
 
 Create `docker-compose.yml`:
 

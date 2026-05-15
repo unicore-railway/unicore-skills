@@ -13,7 +13,7 @@ _Last verified against current tooling: **2026-04-24**._
 
 - Node.js 22 or 24 LTS (24 preferred)
 - npm 11+
-- Colima installed and running with the Docker runtime
+- Docker Desktop installed and running
 
 Optional later-stage tooling:
 
@@ -22,11 +22,9 @@ Optional later-stage tooling:
 
 GitHub org access and Railway workspace access are not required for local scaffolding. Those prerequisites belong to `building-unicore-tool` and `deploying-to-railway`.
 
-Recommended local container setup on macOS:
+Verify Docker Desktop is running:
 
 ```bash
-brew install colima docker
-colima start
 docker ps
 ```
 

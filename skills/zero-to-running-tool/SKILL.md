@@ -1,6 +1,6 @@
 ---
 name: zero-to-running-tool
-description: Use FIRST when the user is non-technical (PM, finance, legal, ops) or is starting from a fresh laptop. Verifies prerequisites (Node 24, Colima, gh, railway), GitHub org membership, and Railway workspace access before any unicore service scaffolding.
+description: Use FIRST when the user is non-technical (PM, finance, legal, ops) or is starting from a fresh laptop. Verifies prerequisites (Node 24, Docker Desktop, gh, railway), GitHub org membership, and Railway workspace access before any unicore service scaffolding.
 ---
 
 # Zero to running tool
@@ -47,20 +47,11 @@ npm -v
 
 Expect `v24.x` and `11.x` or higher. If `node -v` shows an older major or `command not found`, do not proceed. If `which -a node` shows multiple versions, ask the user which to keep on `PATH`.
 
-## 2. Docker-compatible runtime (Colima on macOS)
+## 2. Docker Desktop
 
 Why: local PostgreSQL runs in a container during development. The user does not need to know what Docker is — just that this provides the database.
 
-```bash
-brew install colima docker
-colima start
-```
-
-On Apple-silicon machines that fail to start a VM, retry with native virtualization:
-
-```bash
-colima start --vm-type vz
-```
+Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/) for Mac, then open it and wait for the engine to start (the whale icon in the menu bar turns steady).
 
 **Verify:**
 
@@ -68,7 +59,7 @@ colima start --vm-type vz
 docker ps
 ```
 
-Expect a header row with no containers and no error. If you see `Cannot connect to the Docker daemon`, run `colima start` again and re-verify.
+Expect a header row with no containers and no error. If you see `Cannot connect to the Docker daemon`, make sure Docker Desktop is open and the engine is running.
 
 ## 3. GitHub CLI, SSH key, and `unicore-railway` org access
 
@@ -187,7 +178,7 @@ Use the Railway plugin for general Railway API queries (logs, status, env vars).
 ## Common failure modes
 
 - **`gh auth login` browser closes early.** Re-run it; choose "Login with a web browser" again. If browser auth keeps failing, fall back to "Paste an authentication token" with a personal access token scoped to `repo` and `read:org`.
-- **`colima start` hangs on first run.** First boot can take several minutes while it downloads the VM image. Wait. If it still fails, try `colima delete && colima start --vm-type vz`.
+- **`Cannot connect to the Docker daemon`.** Docker Desktop is not running. Open it from Applications and wait for the whale icon in the menu bar to stop animating.
 - **`node -v` still shows the old version after install.** Another Node is earlier on `PATH`. Run `which -a node`, then either remove the older one or update the user's shell rc file with a `PATH` adjustment — confirm with the user first.
 - **`railway list` shows only a personal workspace.** The org admin invite has not been accepted, or the user signed in to Railway with a different email than the one invited. Have them check both.
 - **User is on Windows.** Stop and ask. The unicore baseline assumes macOS or Linux; WSL2 may work for the same commands but is not officially supported.

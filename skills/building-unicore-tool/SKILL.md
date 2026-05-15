@@ -34,7 +34,7 @@ Both the GitHub org and the Railway workspace are paid, invite-only, and dedicat
 
 ## When to run `zero-to-running-tool` first
 
-If the user is non-technical (PM, finance, legal, ops) or is starting from a fresh laptop, run `zero-to-running-tool` **before** the skill sequence below. It installs Node 24, Colima, `gh`, and the Railway CLI, and verifies GitHub org and Railway workspace access. If any of those checks fail, this orchestrator will fail later in the flow.
+If the user is non-technical (PM, finance, legal, ops) or is starting from a fresh laptop, run `zero-to-running-tool` **before** the skill sequence below. It installs Node 24, Docker Desktop, `gh`, and the Railway CLI, and verifies GitHub org and Railway workspace access. If any of those checks fail, this orchestrator will fail later in the flow.
 
 Skip `zero-to-running-tool` only when you have already verified that `node -v`, `docker ps`, `gh api user/orgs` (returns `unicore-railway`), and `railway whoami` all succeed.
 
