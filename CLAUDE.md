@@ -11,6 +11,10 @@ This applies any time the user asks to:
 
 The skill enforces company conventions that cannot be inferred from context: the correct GitHub org (`unicore-railway`), GitHub-connected deploys (never `railway up`), the approved tech stack, and the full launch checklist. Skipping it leads to the wrong setup.
 
+## Versioning
+
+Bump the patch version in `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` on every commit that changes skills or plugin manifests. Both files must stay in sync.
+
 ## Contributor Notes
 
 - Canonical skill content lives in `skills/`.
