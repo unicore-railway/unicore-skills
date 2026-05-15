@@ -33,35 +33,49 @@ The unicore baseline is on Auth.js v5 (`next-auth@5.x` + `@auth/prisma-adapter`)
 - Env vars renamed: `NEXTAUTH_SECRET` → `AUTH_SECRET`, `NEXTAUTH_URL` → `AUTH_URL`.
 - The auth route handler is App-Router-style. The unicore stack is otherwise Pages Router; this one route is the only App Router file in the project.
 
-## Create the dev Okta app
+## Create the Okta app
 
-The unicore policy is **one Okta app per environment per service**: a separate dev (local) app and a separate prod app, never shared. This section creates the dev one. The prod app comes later, in `deploying-to-railway`.
+The unicore policy is **one shared Okta app per service** — all developers and all environments (dev and production) share a single app. This eliminates Okta sprawl and means credentials are stored once in the Railway `local` environment rather than in every developer's `.env.local`.
 
-Three values end up in `.env.local` from this step:
+Three values come from this step:
 
 - `OKTA_CLIENT_ID`
 - `OKTA_CLIENT_SECRET` — sensitive; treat like a password
-- `OKTA_ISSUER` — for unicore this is always `https://universe.okta.com` (the default Okta authorization server for the `universe` org; no custom auth server is used)
+- `OKTA_ISSUER` — for unicore this is always `https://universe.okta.com`
 
-How you obtain the Client ID and Client Secret depends on whether you have Okta admin rights.
+### Redirect URIs
+
+The app needs both localhost (for all developers) and the production URL:
+
+**Sign-in redirect URIs:**
+- `http://localhost:*/api/auth/callback/okta` — covers any local port
+- `https://<service-name>.unicore-railway.io/api/auth/callback/okta`
+
+**Sign-out redirect URIs:**
+- `http://localhost:*`
+- `https://<service-name>.unicore-railway.io`
+
+When running a second service in parallel locally, start it on a different port:
+
+```bash
+PORT=3001 npm run dev
+```
 
 ### If you are not the Okta admin (most users)
 
-PMs, finance, legal, and ops typically do **not** have admin rights on `universe.okta.com`. Send the Okta admin a request like this — copy, paste, replace `<service-name>`:
+Send the Okta admin a request — copy, paste, replace `<service-name>`:
 
-> Hi, I'm setting up a new internal unicore service called `<service-name>`. Could you create an Okta OIDC Web Application for it with these settings?
+> Hi, I'm setting up a new internal unicore service called `<service-name>`. Could you create a shared Okta OIDC Web Application for it with these settings?
 >
-> - **App name**: `<service-name> (dev)`
+> - **App name**: `<service-name>`
 > - **App type**: OIDC — Web Application
-> - **Sign-in redirect URI**: `http://localhost:3000/api/auth/callback/okta`
-> - **Sign-out redirect URI**: `http://localhost:3000`
+> - **Sign-in redirect URIs**: `http://localhost:*/api/auth/callback/okta`, `https://<service-name>.unicore-railway.io/api/auth/callback/okta`
+> - **Sign-out redirect URIs**: `http://localhost:*`, `https://<service-name>.unicore-railway.io`
 > - **Assigned group**: the internal unicore group you normally use for internal tools
 >
-> Please send me the **Client ID** and **Client Secret** through 1Password / Bitwarden (or another secure channel) — the secret is sensitive, please not plaintext Slack or email.
+> Please send the **Client ID** and **Client Secret** through 1Password / Bitwarden — the secret is sensitive, please not plaintext Slack or email.
 
-Who to ask: the Okta admin at Universe Group is typically someone on the IT or security team. If you don't know who, ask **Roman Shevchuk** (`roman.shevchuk@uni.tech`) and he'll route you to the right person.
-
-When the admin replies, paste the Client ID and Client Secret into `.env.local`. Don't commit them — `.env*.local` is gitignored already.
+Who to ask: the Okta admin at Universe Group is typically someone on the IT or security team. If you don't know who, ask **Roman Shevchuk** (`roman.shevchuk@uni.tech`).
 
 ### If you are the Okta admin
 
@@ -70,97 +84,25 @@ In the Okta admin console for the `universe` org:
 1. Applications → Applications → **Create App Integration**.
 2. Sign-in method: **OIDC — OpenID Connect**.
 3. Application type: **Web Application**. Click **Next**.
-4. App integration name: `<service-name> (dev)`.
-5. Sign-in redirect URI: `http://localhost:3000/api/auth/callback/okta`.
-6. Sign-out redirect URI: `http://localhost:3000`.
+4. App integration name: `<service-name>`.
+5. Sign-in redirect URIs: `http://localhost:*/api/auth/callback/okta` and `https://<service-name>.unicore-railway.io/api/auth/callback/okta`
+6. Sign-out redirect URIs: `http://localhost:*` and `https://<service-name>.unicore-railway.io`
 7. **Assignments** → assign the internal unicore group used for internal tools.
 8. Click **Save**.
 9. On the app's **General** tab, copy the **Client ID** and reveal/copy the **Client secret**.
-10. Send both values to the requester through a secure channel (1Password / Bitwarden / encrypted note), never plaintext Slack or email.
+10. Store both in the Railway production environment (see next section). Send via a secure channel to any developer who needs direct access — never plaintext Slack or email.
 
-The sign-out redirect URI exists so the app can support RP-initiated logout later if needed. It is not a requirement to perform federated logout in the baseline flow.
+### Store credentials in Railway — single source of truth
 
-## Local Okta alternative — Keycloak
+Store the Okta credentials in the Railway production environment so every developer copies from one place instead of exchanging secrets manually. In the Railway dashboard, open the service → **Variables** and set:
 
-If Okta dev credentials aren't available yet (new team member waiting on Okta app creation, working offline, or want a fully self-contained local setup), use **Keycloak** as a drop-in OIDC replacement. Same OIDC flow, same env vars, no Okta account needed.
+| Key | Value |
+|---|---|
+| `OKTA_CLIENT_ID` | from the Okta app |
+| `OKTA_CLIENT_SECRET` | from the Okta app |
+| `OKTA_ISSUER` | `https://universe.okta.com` |
 
-Keycloak is preferred over simpler mock OIDC servers because it supports groups — which matters when auth procedures need to check group membership later.
-
-Add to `docker-compose.yml`:
-
-```yaml
-services:
-  keycloak:
-    image: quay.io/keycloak/keycloak:26.1
-    command: start-dev --import-realm
-    environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./keycloak:/opt/keycloak/data/import
-```
-
-Create `keycloak/realm.json`:
-
-```json
-{
-  "realm": "unicore-dev",
-  "enabled": true,
-  "clients": [
-    {
-      "clientId": "dev-app",
-      "secret": "dev-secret",
-      "redirectUris": ["http://localhost:3000/*"],
-      "webOrigins": ["http://localhost:3000"],
-      "publicClient": false,
-      "protocol": "openid-connect",
-      "standardFlowEnabled": true,
-      "directAccessGrantsEnabled": false,
-      "protocolMappers": [
-        {
-          "name": "groups",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-group-membership-mapper",
-          "consentRequired": false,
-          "config": {
-            "claim.name": "groups",
-            "full.path": "false",
-            "id.token.claim": "true",
-            "access.token.claim": "true",
-            "userinfo.token.claim": "true"
-          }
-        }
-      ]
-    }
-  ],
-  "groups": [
-    { "name": "unicore-users" }
-  ],
-  "users": [
-    {
-      "username": "testuser",
-      "email": "testuser@unicore.local",
-      "firstName": "Test",
-      "lastName": "User",
-      "enabled": true,
-      "credentials": [{ "type": "password", "value": "password", "temporary": false }],
-      "groups": ["unicore-users"]
-    }
-  ]
-}
-```
-
-Set these in `.env.local` when using Keycloak:
-
-```bash
-OKTA_CLIENT_ID="dev-app"
-OKTA_CLIENT_SECRET="dev-secret"
-OKTA_ISSUER="http://localhost:8080/realms/unicore-dev"
-```
-
-The Okta provider in Auth.js works with any OIDC-compliant issuer — no code changes needed to switch between Keycloak and real Okta.
+Developers copy these into their `.env.local` (see [Local env files](#local-env-files) below). Railway is the single source of truth — no 1Password vault or email chains needed.
 
 ## Install auth dependencies
 
@@ -309,10 +251,12 @@ const checks: HealthCheck[] = [
 
 ```bash
 # Auth.js v5
-AUTH_SECRET=""
 # AUTH_URL="http://localhost:3000"
 
-# Okta dev app (or Keycloak — see local dev alternative above)
+# Pre-filled with a shared dev value, safe to use as-is locally.
+AUTH_SECRET="2YVxc1wW3K36K7b7wRTFhkCkm5h6hM/Y67CmzvhvEGY="
+
+# Copy these from the Railway dashboard → service → Variables
 OKTA_CLIENT_ID=""
 OKTA_CLIENT_SECRET=""
 OKTA_ISSUER="https://universe.okta.com"
@@ -321,10 +265,9 @@ OKTA_ISSUER="https://universe.okta.com"
 README onboarding snippet for a DB-less service:
 
 ```bash
-cp .env.example .env.local
-# fill in OKTA_CLIENT_ID / OKTA_CLIENT_SECRET
-# generate AUTH_SECRET: openssl rand -base64 32
 npm install
+cp .env.example .env.local
+# Fill in OKTA_CLIENT_ID and OKTA_CLIENT_SECRET — copy from Railway dashboard → service → Variables
 npm run dev
 ```
 
@@ -452,17 +395,19 @@ Make sure `.gitignore` contains:
 Use this `.env.example` baseline:
 
 ```bash
-# Postgres (local container runtime via docker compose — keep as-is unless you changed docker-compose.yml)
+# Postgres (local container — keep as-is unless you changed docker-compose.yml)
 DATABASE_URL="postgresql://dev:dev@localhost:5432/myservice?schema=public"
 
 # Auth.js v5
-# Generate with: openssl rand -base64 32
-AUTH_SECRET=""
 # AUTH_URL is optional locally — Auth.js auto-detects http://localhost:3000.
 # In production it must be set to the public URL.
 # AUTH_URL="http://localhost:3000"
 
-# Okta dev app — ask the unicore lead / Okta admin for these
+# Pre-filled with a shared dev value, safe to use as-is locally.
+# Never use this value in production — Railway sets its own AUTH_SECRET there.
+AUTH_SECRET="2YVxc1wW3K36K7b7wRTFhkCkm5h6hM/Y67CmzvhvEGY="
+
+# Copy these from the Railway dashboard → service → Variables
 OKTA_CLIENT_ID=""
 OKTA_CLIENT_SECRET=""
 OKTA_ISSUER="https://universe.okta.com"
@@ -473,11 +418,17 @@ OKTA_ISSUER="https://universe.okta.com"
 Add this to the service repo `README.md`:
 
 ```bash
-cp .env.example .env.local
-# fill in OKTA_CLIENT_ID / OKTA_CLIENT_SECRET from the shared team note
-# generate AUTH_SECRET: openssl rand -base64 32
+# 1. Start local Postgres
 docker compose up -d
+
+# 2. Install dependencies and apply migrations
 npm install
 npm run db:migrate
+
+# 3. Set up local env
+cp .env.example .env.local
+# Fill in OKTA_CLIENT_ID and OKTA_CLIENT_SECRET — copy from Railway dashboard → service → Variables
+
+# 4. Start dev server
 npm run dev
 ```

@@ -40,35 +40,15 @@ railway add --database postgresql
 
 Keep `web` and `postgres` in one Railway project.
 
-## Create the production Okta app
+## Verify the Okta app redirect URI
 
-A **separate** Okta app for production. Never reuse the dev app's credentials in prod — the redirect URIs differ, and rotating one shouldn't take down the other. Same two-path approach as in `setting-up-nextauth-okta`.
+The Okta app was created in `setting-up-nextauth-okta` with the production redirect URI already included. Before deploying, confirm the app's sign-in redirect URIs contain:
 
-### If you are not the Okta admin
+```
+https://<service-name>.unicore-railway.io/api/auth/callback/okta
+```
 
-Send the admin this request, replacing `<service-name>`:
-
-> Hi, I need a production Okta OIDC Web Application for `<service-name>`. Settings:
->
-> - **App name**: `<service-name> (prod)`
-> - **App type**: OIDC — Web Application
-> - **Sign-in redirect URI**: `https://<service-name>.unicore-railway.io/api/auth/callback/okta`
-> - **Sign-out redirect URI**: `https://<service-name>.unicore-railway.io`
-> - **Assigned group**: the internal unicore group used for internal tools (same group as the dev app)
->
-> Please send the **Client ID** and **Client Secret** through 1Password / Bitwarden — secret is sensitive.
-
-When the admin replies, paste the values directly into Railway's variables UI for the `web` service (see the next section). Do not store the production Client Secret in any repo file — Railway is the only source of truth.
-
-### If you are the Okta admin
-
-Repeat the dev-app steps from `setting-up-nextauth-okta` with these differences:
-
-- App integration name: `<service-name> (prod)`
-- Sign-in redirect URI: `https://<service-name>.unicore-railway.io/api/auth/callback/okta`
-- Sign-out redirect URI: `https://<service-name>.unicore-railway.io`
-
-Send the Client ID and Client Secret through a secure channel.
+If the production URL changed (e.g. a custom domain was chosen instead of the default), update the Okta app's redirect URIs to match. The Okta admin can edit them in Applications → `<service-name>` → General → **Edit**.
 
 ## Production variables
 
@@ -80,8 +60,8 @@ Set these on the `web` service:
 | `AUTH_SECRET` | fresh `openssl rand -base64 32` output |
 | `AUTH_URL` | `https://<service>.unicore-railway.io` |
 | `AUTH_TRUST_HOST` | `true` (Railway terminates TLS in front of the app) |
-| `OKTA_CLIENT_ID` | production Okta app client ID |
-| `OKTA_CLIENT_SECRET` | production Okta app client secret |
+| `OKTA_CLIENT_ID` | from the shared Okta app (same as dev) |
+| `OKTA_CLIENT_SECRET` | from the shared Okta app (same as dev) |
 | `OKTA_ISSUER` | `https://universe.okta.com` |
 
 Railway variables are the source of truth for production secrets. Names follow the Auth.js v5 convention (`AUTH_*`); the legacy `NEXTAUTH_*` names are no longer used.

@@ -31,6 +31,19 @@ volumes:
   postgres-data:
 ```
 
+If you run multiple services on the same machine, each needs a unique host port to avoid conflicts. Change the left side of the port mapping (host port) — the container port stays 5432:
+
+```yaml
+ports:
+  - '127.0.0.1:5433:5432'  # use 5433, 5434, etc. for each additional service
+```
+
+Update `DATABASE_URL` in `.env.local` to match:
+
+```bash
+DATABASE_URL="postgresql://dev:dev@localhost:5433/myservice?schema=public"
+```
+
 Start the database:
 
 ```bash
