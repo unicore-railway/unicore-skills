@@ -227,6 +227,19 @@ npm install next-auth@beta @auth/prisma-adapter
 
 `next-auth@beta` is the v5 release channel. Pin the resolved version in `package.json` once installed.
 
+## Update next.config.ts
+
+Add `transpilePackages` to `next.config.ts`:
+
+```ts
+const nextConfig: NextConfig = {
+  reactStrictMode: true,
+  transpilePackages: ['next-auth'],
+};
+```
+
+`next-auth@beta` imports `from "next/server"` without the `.js` extension. Next.js 16 ESM resolution requires the extension when a package is loaded natively — `transpilePackages` forces webpack to bundle next-auth instead, where the missing extension is not a problem. Without this, every auth endpoint returns a 500 at runtime with `ERR_MODULE_NOT_FOUND` for `next/server`.
+
 ## Extend env validation
 
 Add auth keys to `src/lib/env.ts`:
