@@ -102,17 +102,26 @@ Railway uses this signal to gate traffic during deploys — a failed healthcheck
 
 Wait for the certificate to issue, then confirm `AUTH_URL` and the production Okta callback URLs match the custom domain.
 
-Once the domain is live, add the production URL to the top of the project's `README.md`:
+Once the domain is live, add the production URL and Railway project link to the top of the project's `README.md`:
 
 ```markdown
 **Production:** https://<service-name>.unicore-railway.io
+**Railway:** https://railway.com/project/<projectId>/service/<serviceId>?environmentId=<environmentId>
 ```
+
+Get the IDs from the CLI:
+
+```bash
+railway status
+```
+
+This prints the project ID, service ID, and environment ID for the linked service. The Railway link gives any developer a one-click jump to logs, variables, and deploy history without hunting through the dashboard.
 
 Commit and push:
 
 ```bash
 git add README.md
-git commit -m "docs: add production URL"
+git commit -m "docs: add production URL and Railway project link"
 git push
 ```
 
