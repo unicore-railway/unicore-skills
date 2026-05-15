@@ -333,6 +333,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   session: { strategy: 'jwt' },
+  callbacks: {
+    authorized({ auth: session, request }) {
+      const path = request.nextUrl.pathname;
+      if (path.startsWith('/api/health') || path.startsWith('/api/auth/')) {
+        return true;
+      }
+      return !!session;
+    },
+  },
 });
 
 export async function checkAuthHealth(): Promise<HealthCheckResult> {
@@ -361,6 +370,20 @@ const checks: HealthCheck[] = [
   checkAuthHealth,
 ];
 ```
+
+### Global route gate
+
+For a DB-less service the standard pattern is a middleware gate that protects every route. Create `src/middleware.ts`:
+
+```ts
+export { auth as middleware } from '@/lib/auth';
+
+export const config = {
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+};
+```
+
+The `authorized` callback in `auth.ts` controls what the middleware allows through. `/api/health` and `/api/auth/` are explicitly passed — without these, the Railway healthcheck returns a redirect and the Auth.js callback loop breaks.
 
 `.env.example` for a DB-less service — no `DATABASE_URL`:
 
@@ -433,6 +456,18 @@ import { SessionProvider } from 'next-auth/react';
 export default function App({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
     <SessionProvider session={session}>
+      <Component {...pageProps} />
+    </SessionProvider>
+  );
+}
+```
+
+The `session` prop pattern avoids a client-side refetch on SSR pages that call `getSession()` in `getServerSideProps`. For JWT path apps with a global middleware gate, unauthenticated users never reach any page, so there is no `getServerSideProps` session fetch and `session` is always `undefined`. Use plain `<SessionProvider>` instead:
+
+```tsx
+export default function App({ Component, pageProps }: AppProps) {
+  return (
+    <SessionProvider>
       <Component {...pageProps} />
     </SessionProvider>
   );
