@@ -15,7 +15,10 @@ Marketplace install:
 ```bash
 /plugin marketplace add unicore-railway/unicore-skills
 /plugin install unicore-skills@unicore-skills
+/reload-plugins
 ```
+
+`/reload-plugins` activates skills immediately without restarting. If skills don't appear after install, run it again.
 
 Local iteration:
 
@@ -29,6 +32,7 @@ To update to the latest version:
 
 ```bash
 /plugin update unicore-skills@unicore-skills
+/reload-plugins
 ```
 
 ### Recommended companion: Railway plugin
