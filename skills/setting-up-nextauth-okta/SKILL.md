@@ -104,6 +104,121 @@ Store the Okta credentials in the Railway production environment so every develo
 
 Developers copy these into their `.env.local` (see [Local env files](#local-env-files) below). Railway is the single source of truth — no 1Password vault or email chains needed.
 
+## Local dev alternatives
+
+The default approach (Real Okta) requires internet access and puts production credentials on developer machines — the same `OKTA_CLIENT_ID` and `OKTA_CLIENT_SECRET` used in production. For teams that need offline dev, a cleaner credential boundary, or a zero-setup experience for non-engineers, two alternatives are supported.
+
+| | Groups/roles | OIDC code path | Docker | Setup |
+|---|---|---|---|---|
+| **Real Okta** | ✅ | ✅ | No | Copy 2 vars from Railway |
+| **Keycloak** | ✅ | ✅ | Yes | `docker compose up -d` |
+| **Credentials provider** | ⚠️ Mocked | ❌ | No | Nothing |
+
+**When to use Keycloak:** the service checks group membership, you want full OIDC parity locally, or you need offline dev. Groups flow through a real OIDC token with the same shape as Okta — no code workarounds needed.
+
+**When to use the Credentials provider:** the service only needs to know "is this user authenticated" with no group checks. Zero setup — Auth.js renders a default login form automatically, no custom page required.
+
+### Keycloak
+
+Add to `docker-compose.yml`:
+
+```yaml
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1
+    command: start-dev --import-realm
+    ports:
+      - '8080:8080'
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+    volumes:
+      - ./keycloak/realm.json:/opt/keycloak/data/import/realm.json
+```
+
+Create `keycloak/realm.json`:
+
+```json
+{
+  "realm": "unicore",
+  "enabled": true,
+  "sslRequired": "none",
+  "clients": [{
+    "clientId": "local",
+    "secret": "local-secret",
+    "standardFlowEnabled": true,
+    "redirectUris": ["http://localhost:3000/*"],
+    "protocolMappers": [{
+      "name": "groups",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-group-membership-mapper",
+      "consentRequired": false,
+      "config": {
+        "full.path": "false",
+        "id.token.claim": "true",
+        "access.token.claim": "true",
+        "claim.name": "groups",
+        "userinfo.token.claim": "true"
+      }
+    }]
+  }],
+  "groups": [{ "name": "unicore-employees" }],
+  "users": [{
+    "username": "dev",
+    "email": "dev@uni.tech",
+    "firstName": "Dev",
+    "lastName": "User",
+    "emailVerified": true,
+    "enabled": true,
+    "credentials": [{ "type": "password", "value": "dev", "temporary": false }],
+    "groups": ["/unicore-employees"]
+  }]
+}
+```
+
+Set in `.env.local`:
+
+```bash
+OKTA_CLIENT_ID="local"
+OKTA_CLIENT_SECRET="local-secret"
+OKTA_ISSUER="http://localhost:8080/realms/unicore"
+```
+
+Start with `docker compose up -d`. Admin console at `http://localhost:8080` (admin / admin). Add more test users or groups directly in `realm.json`.
+
+The `groups` claim mapper emits the same token shape as Okta — no code changes needed to switch between Keycloak and real Okta.
+
+### Credentials provider
+
+For services that only need a simple auth gate with no group checks. Add behind a `NODE_ENV` guard so it is **never active in production**:
+
+```ts
+// src/lib/auth.ts
+import Credentials from 'next-auth/providers/credentials';
+
+const devProviders = process.env.NODE_ENV === 'development'
+  ? [Credentials({
+      credentials: { email: {}, password: {} },
+      authorize: ({ email, password }) =>
+        email === 'dev@uni.tech' && password === 'dev'
+          ? { id: 'dev', email: 'dev@uni.tech', name: 'Dev User' }
+          : null,
+    })]
+  : [];
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    Okta({ ... }),
+    ...devProviders,
+  ],
+  ...
+});
+```
+
+Auth.js renders a default login form at `/api/auth/signin` — no custom page needed. Login with `dev@uni.tech` / `dev`.
+
+**Do not use** the Credentials provider if the service checks group membership — groups must be hardcoded and kept manually in sync with Okta's token shape, which creates a silent divergence between local and production behavior.
+
 ## Install auth dependencies
 
 ```bash
