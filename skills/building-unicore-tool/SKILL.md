@@ -23,6 +23,25 @@ The house defaults are:
 - Railway deployment is **always GitHub-connected** — never `railway up`
 - Railway production deployment under `unicore-railway.io`
 
+## Check plugin version before starting
+
+Fetch the latest published version and compare it to what's installed:
+
+```bash
+gh api repos/unicore-railway/unicore-skills/contents/.claude-plugin/marketplace.json \
+  --jq '.content' | base64 -d | jq -r '"Latest: " + .metadata.version'
+```
+
+Check your installed version in Claude Code: **Settings → Plugins → Unicore skills**.
+
+If the installed version is behind, update before proceeding:
+
+```bash
+/plugin update unicore-skills@unicore-skills
+```
+
+Stale plugin versions may contain outdated conventions, wrong domain names, or missing steps.
+
 ## Access prerequisites
 
 Both the GitHub org and the Railway workspace are paid, invite-only, and dedicated to internal unicore tools that are **vibe-coded** and **hosted on Railway**. Before doing anything else, the engineer (or agent acting on their behalf) needs to be a member of:

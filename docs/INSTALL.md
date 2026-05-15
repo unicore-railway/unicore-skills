@@ -17,6 +17,12 @@ claude --plugin-dir /path/to/unicore-skills
 
 The repository includes [.claude-plugin/marketplace.json](../.claude-plugin/marketplace.json) in addition to the plugin manifest.
 
+To update to the latest version:
+
+```bash
+/plugin update unicore-skills@unicore-skills
+```
+
 ### Recommended companion: Railway plugin
 
 The official Railway plugin gives agents direct Railway API access (deploy status, logs, env vars, domains). Install it alongside unicore-skills:
