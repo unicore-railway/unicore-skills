@@ -80,6 +80,88 @@ In the Okta admin console for the `universe` org:
 
 The sign-out redirect URI exists so the app can support RP-initiated logout later if needed. It is not a requirement to perform federated logout in the baseline flow.
 
+## Local Okta alternative — Keycloak
+
+If Okta dev credentials aren't available yet (new team member waiting on Okta app creation, working offline, or want a fully self-contained local setup), use **Keycloak** as a drop-in OIDC replacement. Same OIDC flow, same env vars, no Okta account needed.
+
+Keycloak is preferred over simpler mock OIDC servers because it supports groups — which matters when auth procedures need to check group membership later.
+
+Add to `docker-compose.yml`:
+
+```yaml
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1
+    command: start-dev --import-realm
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./keycloak:/opt/keycloak/data/import
+```
+
+Create `keycloak/realm.json`:
+
+```json
+{
+  "realm": "unicore-dev",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "dev-app",
+      "secret": "dev-secret",
+      "redirectUris": ["http://localhost:3000/*"],
+      "webOrigins": ["http://localhost:3000"],
+      "publicClient": false,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "protocolMappers": [
+        {
+          "name": "groups",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-group-membership-mapper",
+          "consentRequired": false,
+          "config": {
+            "claim.name": "groups",
+            "full.path": "false",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "groups": [
+    { "name": "unicore-users" }
+  ],
+  "users": [
+    {
+      "username": "testuser",
+      "email": "testuser@unicore.local",
+      "firstName": "Test",
+      "lastName": "User",
+      "enabled": true,
+      "credentials": [{ "type": "password", "value": "password", "temporary": false }],
+      "groups": ["unicore-users"]
+    }
+  ]
+}
+```
+
+Set these in `.env.local` when using Keycloak:
+
+```bash
+OKTA_CLIENT_ID="dev-app"
+OKTA_CLIENT_SECRET="dev-secret"
+OKTA_ISSUER="http://localhost:8080/realms/unicore-dev"
+```
+
+The Okta provider in Auth.js works with any OIDC-compliant issuer — no code changes needed to switch between Keycloak and real Okta.
+
 ## Install auth dependencies
 
 ```bash
@@ -153,6 +235,98 @@ export async function checkAuthHealth(): Promise<HealthCheckResult> {
 ```
 
 `checkAuthHealth` reports `degraded` (not `down`) on Okta connectivity issues so a brief upstream blip does not flap the whole service health.
+
+## JWT path — DB-less apps
+
+For services without a database (simple auth gates, landing pages, redirect servers), use `session: { strategy: 'jwt' }` instead of `PrismaAdapter`. No `DATABASE_URL` or Prisma required.
+
+Install without the adapter:
+
+```bash
+npm install next-auth@beta
+```
+
+**Do not include auth env vars in `src/lib/env.ts`.** Auth.js v5's `[...nextauth]/route.ts` is an App Router file, and Next.js evaluates App Router modules at build time. If auth vars are in the zod schema, the build fails because `OKTA_CLIENT_ID` etc. are not present in the build environment. Read them via `process.env` directly in `auth.ts` instead.
+
+`src/lib/env.ts` for a DB-less service — omit all auth vars:
+
+```ts
+import { z } from 'zod';
+
+const schema = z.object({
+  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+});
+
+export const env = schema.parse(process.env);
+```
+
+`src/lib/auth.ts` — use `process.env` directly, no PrismaAdapter:
+
+```ts
+import NextAuth from 'next-auth';
+import Okta from 'next-auth/providers/okta';
+import type { HealthCheckResult } from '@/lib/health';
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  providers: [
+    Okta({
+      clientId: process.env.OKTA_CLIENT_ID!,
+      clientSecret: process.env.OKTA_CLIENT_SECRET!,
+      issuer: process.env.OKTA_ISSUER!,
+    }),
+  ],
+  session: { strategy: 'jwt' },
+});
+
+export async function checkAuthHealth(): Promise<HealthCheckResult> {
+  const issuer = process.env.OKTA_ISSUER ?? '';
+  const url = `${issuer.replace(/\/$/, '')}/.well-known/openid-configuration`;
+  try {
+    const res = await fetch(url, { signal: AbortSignal.timeout(2000) });
+    return res.ok
+      ? { name: 'auth', status: 'ok' }
+      : { name: 'auth', status: 'degraded', message: `Okta returned ${res.status}` };
+  } catch (e) {
+    return {
+      name: 'auth',
+      status: 'degraded',
+      message: e instanceof Error ? e.message : String(e),
+    };
+  }
+}
+```
+
+Health check in `src/pages/api/health.ts` — no `checkPrismaHealth`:
+
+```ts
+const checks: HealthCheck[] = [
+  async () => ({ name: 'app', status: 'ok' }),
+  checkAuthHealth,
+];
+```
+
+`.env.example` for a DB-less service — no `DATABASE_URL`:
+
+```bash
+# Auth.js v5
+AUTH_SECRET=""
+# AUTH_URL="http://localhost:3000"
+
+# Okta dev app (or Keycloak — see local dev alternative above)
+OKTA_CLIENT_ID=""
+OKTA_CLIENT_SECRET=""
+OKTA_ISSUER="https://universe.okta.com"
+```
+
+README onboarding snippet for a DB-less service:
+
+```bash
+cp .env.example .env.local
+# fill in OKTA_CLIENT_ID / OKTA_CLIENT_SECRET
+# generate AUTH_SECRET: openssl rand -base64 32
+npm install
+npm run dev
+```
 
 ## Auth route handler (App Router exception)
 
