@@ -1,5 +1,13 @@
 # Installation
 
+- [Claude Code](#claude-code)
+  - [Recommended companion: Railway plugin](#recommended-companion-railway-plugin)
+- [Claude Desktop](#claude-desktop)
+- [Codex](#codex)
+- [Cursor](#cursor)
+- [Windsurf](#windsurf)
+- [GitHub Copilot](#github-copilot)
+
 ## Claude Code
 
 Marketplace install:
